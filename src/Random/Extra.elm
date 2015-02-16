@@ -116,6 +116,11 @@ emptyList : Generator (List a)
 emptyList =
   constant []
 
+
+rangeLengthList : Int -> Int -> Generator a -> Generator (List a)
+rangeLengthList minLength maxLength generator =
+  flatMap (\len -> list len generator) (int minLength maxLength)
+
 {-| Generator that randomly selects an element from a list.
 -}
 select : List a -> Generator (Maybe a)

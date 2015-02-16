@@ -1,23 +1,23 @@
 {
-    "version": "1.0.0",
-    "summary": "helpful summary of your project, less than 80 characters",
-    "repository": "https://github.com/USER/PROJECT.git",
-    "license": "BSD3",
+    "version": "1.0.1",
+    "summary": "Extra functionality for the core Random library",
+    "repository": "https://github.com/TheSeamau5/elm-random-extra.git",
+    "license": "MIT",
     "source-directories": [
         "src"
     ],
     "exposed-modules": [
-      "Random.Array",
-      "Random.Char",
-      "Random.Color",
-      "Random.Date",
-      "Random.Dict",
-      "Random.Extra",
-      "Random.Keyboard",
-      "Random.Mouse",
-      "Random.String",
-      "Random.Touch",
-      "Random.Window"
+        "Random.Array",
+        "Random.Char",
+        "Random.Color",
+        "Random.Date",
+        "Random.Dict",
+        "Random.Extra",
+        "Random.Keyboard",
+        "Random.Mouse",
+        "Random.String",
+        "Random.Touch",
+        "Random.Window"
     ],
     "dependencies": {
         "elm-lang/core": "1.1.0 <= v < 2.0.0"
