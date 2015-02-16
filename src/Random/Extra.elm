@@ -1,6 +1,7 @@
 module Random.Extra
   ( constant
   , emptyList
+  , rangeLengthList
   , bool
   , anyInt
   , positiveInt
@@ -67,6 +68,9 @@ module Random.Extra
 # Float Generators
 @docs anyFloat, positiveFloat, negativeFloat, floatGreaterThan, floatLessThan, probability, negativeProbability, absoluteProbability
 
+# List Generators
+@docs rangeLengthList
+
 # Function Generators
 @docs func, func2, func3, func4, func5, func6
 
@@ -116,7 +120,9 @@ emptyList : Generator (List a)
 emptyList =
   constant []
 
-
+{-| Generate a random list of random length given a minimum length and
+a maximum length.
+-}
 rangeLengthList : Int -> Int -> Generator a -> Generator (List a)
 rangeLengthList minLength maxLength generator =
   flatMap (\len -> list len generator) (int minLength maxLength)
