@@ -6,10 +6,10 @@ module Random.Keyboard where
 
 -}
 
-import Keyboard (KeyCode)
+import Keyboard exposing (KeyCode)
 import List
-import Random (..)
-import Random.Extra (map)
+import Random exposing (..)
+import Random.Extra exposing (map)
 
 
 {-| Generate random Keyboard arrows input

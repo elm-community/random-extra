@@ -53,7 +53,7 @@ module Random.Extra
   , generateUntil
   , generateSuchThat
   , maybeGenerateSuchThat
-  )where
+  ) where
 {-| Module providing extra functionality to the core Random module.
 
 # Constant Generators
@@ -100,7 +100,7 @@ module Random.Extra
 
 -}
 
-import Random (..)
+import Random exposing (..)
 import List
 
 

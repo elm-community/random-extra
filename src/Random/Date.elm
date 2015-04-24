@@ -6,10 +6,10 @@ module Random.Date where
 
 -}
 
-import Date (Day(..), Month(..), fromTime, toTime, Date)
-import Time (Time)
-import Random (..)
-import Random.Extra (map)
+import Date exposing (Day(..), Month(..), fromTime, toTime, Date)
+import Time exposing (Time)
+import Random exposing (..)
+import Random.Extra exposing (map)
 
 {-| Generate a random day of the week.
 -}

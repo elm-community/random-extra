@@ -7,8 +7,8 @@ module Random.Color where
 -}
 
 import Color
-import Random (..)
-import Random.Extra (map, map3, map4)
+import Random exposing (..)
+import Random.Extra exposing (map, map3, map4)
 
 {-| Generate a random color
 -}

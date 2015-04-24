@@ -9,10 +9,10 @@ module Random.String where
 
 -}
 
-import String (fromList)
-import Random (..)
-import Random.Char (upperCaseLatin, lowerCaseLatin, unicode)
-import Random.Extra (map, map2, flatMap)
+import String exposing (fromList)
+import Random exposing (..)
+import Random.Char exposing (upperCaseLatin, lowerCaseLatin, unicode)
+import Random.Extra exposing (map, map2, flatMap)
 
 
 
@@ -109,7 +109,7 @@ given a minimum length and a maximum length.
 -}
 rangeLengthCapitalizedEnglishWord : Int -> Int -> Generator String
 rangeLengthCapitalizedEnglishWord minLength maxLength =
-  flatMap capitalizedEnglishWord (int minLength maxLength) 
+  flatMap capitalizedEnglishWord (int minLength maxLength)
 
 
 

@@ -9,9 +9,9 @@ module Random.Char where
 
 -}
 
-import Char (fromCode)
-import Random (..)
-import Random.Extra (map, merge)
+import Char exposing (fromCode)
+import Random exposing (..)
+import Random.Extra exposing (map, merge)
 
 {-| Generate a random character within a certain keyCode range
 
