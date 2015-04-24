@@ -1,6 +1,7 @@
 module Random.Task where
 
 import Task         exposing (Task, ThreadID, spawn, succeed, fail, sleep)
+import Task.Extra   as Task
 import Random       exposing (Generator, float)
 import Random.Extra exposing (map, constant, flatMap)
 import Time         exposing (Time)
@@ -32,3 +33,8 @@ threadedTask generator =
 sequence : Generator (List (Task error value)) -> Generator (Task error (List value))
 sequence generator =
   map Task.sequence generator
+
+
+parallel : Generator (List (Task error value)) -> Generator (Task error (List ThreadID))
+parallel generator =
+  map Task.parallel generator
