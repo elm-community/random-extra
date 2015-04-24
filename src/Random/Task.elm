@@ -25,7 +25,7 @@ rangeLengthTimeout minTime maxTime =
   flatMap timeout (float minTime maxTime)
 
 
-threadedTask : Generator (Task error value) -> Generator (Task y ThreadID)
+threadedTask : Generator (Task x value) -> Generator (Task y ThreadID)
 threadedTask generator =
   map spawn generator
 
@@ -38,3 +38,7 @@ sequence generator =
 parallel : Generator (List (Task error value)) -> Generator (Task error (List ThreadID))
 parallel generator =
   map Task.parallel generator
+
+optional : Generator (List (Task x value)) -> Generator (Task y (List value))
+optional generator =
+  map Task.optional generator
