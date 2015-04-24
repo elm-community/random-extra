@@ -1,6 +1,6 @@
 module Random.Task where
 
-import Task         exposing (Task, succeed, fail, sleep)
+import Task         exposing (Task, ThreadID, spawn, succeed, fail, sleep)
 import Random       exposing (Generator, float)
 import Random.Extra exposing (map, constant, flatMap)
 import Time         exposing (Time)
@@ -22,3 +22,13 @@ timeout time =
 rangeLengthTimeout : Time -> Time -> Generator (Task error ())
 rangeLengthTimeout minTime maxTime =
   flatMap timeout (float minTime maxTime)
+
+
+threadedTask : Generator (Task error value) -> Generator (Task y ThreadID)
+threadedTask generator =
+  map spawn generator
+
+
+sequence : Generator (List (Task error value)) -> Generator (Task error (List value))
+sequence generator =
+  map Task.sequence generator
