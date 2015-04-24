@@ -602,6 +602,16 @@ cappedGenerateUntil maxGenerations predicate generator seed =
       else
         []
 
+
+generateWithDefault : List a -> Generator a -> Seed -> List (a, Seed)
+generateWithDefault list generator seed =
+  case list of
+    [] -> [generate generator seed]
+    x :: xs ->
+      let (value, nextSeed) = generate generator seed
+      in
+        (x, nextSeed) :: generateWithDefault xs generator nextSeed
+
 quickGenerate : Generator a -> Seed -> a
 quickGenerate generator seed =
   (fst (generate generator seed))
