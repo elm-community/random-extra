@@ -1,6 +1,7 @@
 module Random.Extra
   ( constant
   , emptyList
+  , flattenList
   , rangeLengthList
   , bool
   , anyInt
@@ -58,7 +59,7 @@ module Random.Extra
 {-| Module providing extra functionality to the core Random module.
 
 # Constant Generators
-@docs constant, emptyList
+@docs constant, emptyList, flattenList
 
 # Boolean Generator
 @docs bool
@@ -120,6 +121,19 @@ get index list =
 emptyList : Generator (List a)
 emptyList =
   constant []
+
+{-| Turn a list of generators into a generator of lists.
+-}
+flattenList : List (Generator a) -> Generator (List a)
+flattenList generators = case generators of
+  [] -> emptyList
+  g :: gs ->
+    customGenerator <|
+      \seed ->
+        let (first, seed1)  = generate g seed
+            (rest , seed2)  = generate (flattenList gs) seed1
+        in
+            (first :: rest, seed2)
 
 {-| Generate a random list of random length given a minimum length and
 a maximum length.
