@@ -5,6 +5,7 @@ import Task.Extra   as Task
 import Random       exposing (Generator, float)
 import Random.Extra exposing (map, constant, flatMap)
 import Time         exposing (Time)
+import Signal       exposing (Address)
 
 task : Generator value -> Generator (Task error value)
 task generator =
@@ -42,3 +43,11 @@ parallel generator =
 optional : Generator (List (Task x value)) -> Generator (Task y (List value))
 optional generator =
   map Task.optional generator
+
+send : Address a -> Generator a -> Generator (Task error ())
+send address generator =
+  map (Signal.send address) generator
+
+broadcast : List (Address a) -> Generator a -> Generator (Task error ())
+broadcast addresses generator =
+  map (Task.broadcast addresses) generator
