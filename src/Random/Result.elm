@@ -22,8 +22,8 @@ frequency errFrequency okFrequency errorGenerator okGenerator =
            | errFrequency == 0 -> 1
            | okFrequency  == 0 -> 0
            | otherwise ->
-              (toFloat okFrequency) /
-                (toFloat errFrequency + toFloat okFrequency)
+              (abs (toFloat okFrequency)) /
+                (abs (toFloat errFrequency) + abs (toFloat okFrequency))
   in
     customGenerator <|
       \seed ->
