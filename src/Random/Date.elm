@@ -6,9 +6,9 @@ module Random.Date where
 
 -}
 
-import Date exposing (Day(..), Month(..), fromTime, toTime, Date)
-import Time exposing (Time)
-import Random exposing (..)
+import Date         exposing (Day(..), Month(..), fromTime, toTime, Date)
+import Time         exposing (Time)
+import Random       exposing (Generator, int, float)
 import Random.Extra exposing (map)
 
 {-| Generate a random day of the week.

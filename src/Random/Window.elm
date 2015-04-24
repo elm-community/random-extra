@@ -6,7 +6,7 @@ module Random.Window where
 
 -}
 
-import Random exposing (..)
+import Random       exposing (Generator, int)
 import Random.Extra exposing (zip)
 
 {-| Generate a random tuple of window dimensions given a minimum screen width, a maximum screen width, a minimum screen height, a maximum screen height

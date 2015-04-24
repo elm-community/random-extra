@@ -10,7 +10,7 @@ module Random.String where
 -}
 
 import String exposing (fromList)
-import Random exposing (..)
+import Random exposing (Generator, list, int, maxInt)
 import Random.Char exposing (upperCaseLatin, lowerCaseLatin, unicode)
 import Random.Extra exposing (map, map2, flatMap)
 

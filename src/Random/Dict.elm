@@ -6,8 +6,8 @@ module Random.Dict where
 
 -}
 
-import Dict exposing (Dict, fromList, empty)
-import Random exposing (..)
+import Dict         exposing (Dict, fromList, empty)
+import Random       exposing (Generator, list, int)
 import Random.Extra exposing (zip, map, flatMap, constant)
 
 {-| Generate a random dict with given length, key generator, and value generator

@@ -6,7 +6,7 @@ module Random.Mouse where
 
 -}
 
-import Random exposing (..)
+import Random       exposing (Generator, int)
 import Random.Extra exposing (bool, zip)
 
 {-| Generate a random mouse position given a screen width and a screen height

@@ -6,9 +6,9 @@ module Random.Keyboard where
 
 -}
 
-import Keyboard exposing (KeyCode)
 import List
-import Random exposing (..)
+import Keyboard     exposing (KeyCode)
+import Random       exposing (Generator, int)
 import Random.Extra exposing (map)
 
 

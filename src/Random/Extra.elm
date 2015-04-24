@@ -52,6 +52,7 @@ module Random.Extra
   , generateIterativelySuchThat
   , generateUntil
   , generateSuchThat
+  , generateWithDefault
   , maybeGenerateSuchThat
   ) where
 {-| Module providing extra functionality to the core Random module.
