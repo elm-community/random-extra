@@ -16,15 +16,13 @@ import Random.Extra exposing (map)
 -}
 arrows : Generator { x : Int, y : Int }
 arrows =
-  let intToArrows int =
-        case int of
-          0 -> { x = 0, y = 0}
-          1 -> { x = 0, y = 1}
-          2 -> { x = 1, y = 0}
-          _ -> { x = 1, y = 1}
-  in
-    map intToArrows (int 0 3)
-
+  selectWithDefault { x = 0, y = 0 }
+    [ { x = 0, y = 0 }
+    , { x = 0, y = 1 }
+    , { x = 1, y = 0 }
+    , { x = 1, y = 1 }
+    ]
+    
 {-| Generate a random Keyboard input.
 -}
 keyCode : Generator KeyCode
