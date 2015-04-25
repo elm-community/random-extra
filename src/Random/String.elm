@@ -5,14 +5,14 @@ module Random.String where
 @docs string, word, englishWord, capitalizedEnglishWord
 
 # Random Length String Generators
-@docs rangeLengthString, anyString, rangeLengthWord, rangeLengthEnglishWord, anyEnglishWord
+@docs rangeLengthString, rangeLengthWord, rangeLengthEnglishWord, anyEnglishWord
 
 -}
 
-import String (fromList)
-import Random (..)
-import Random.Char (upperCaseLatin, lowerCaseLatin, unicode)
-import Random.Extra (map, map2, flatMap)
+import String exposing (fromList)
+import Random exposing (Generator, list, int)
+import Random.Char exposing (upperCaseLatin, lowerCaseLatin, unicode)
+import Random.Extra exposing (map, map2, flatMap)
 
 
 
@@ -32,16 +32,6 @@ and maximum length and a given character generator.
 rangeLengthString : Int -> Int -> Generator Char -> Generator String
 rangeLengthString minLength maxLength charGenerator =
   flatMap (\len -> string len charGenerator) (int minLength maxLength)
-
-
-{-| Generates a random string of random length between 0 and `maxInt`.
-Note: Will more often than note produce gigantic strings. Use for testing functions
-on strings. Not appropriate for testing layout. Please use the appropriate generators
-from the list such as `string`, `word`, `rangeLengthString`, or `rangeLengthWord`.
--}
-anyString : Generator String
-anyString =
-  rangeLengthString 0 maxInt unicode
 
 
 
@@ -109,7 +99,7 @@ given a minimum length and a maximum length.
 -}
 rangeLengthCapitalizedEnglishWord : Int -> Int -> Generator String
 rangeLengthCapitalizedEnglishWord minLength maxLength =
-  flatMap capitalizedEnglishWord (int minLength maxLength) 
+  flatMap capitalizedEnglishWord (int minLength maxLength)
 
 
 

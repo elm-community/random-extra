@@ -6,9 +6,11 @@ module Random.Touch where
 
 -}
 
-import Touch (Touch)
-import Random (..)
-import Random.Extra (map2, map6, anyInt, positiveFloat)
+import Touch        exposing (Touch)
+import Random       exposing (Generator, int)
+import Random.Extra exposing (map2, map6)
+import Random.Int   exposing (anyInt)
+import Random.Float exposing (positiveFloat)
 
 {-| Generate a random tap given a screen width and screen height
 -}

@@ -6,47 +6,43 @@ module Random.Date where
 
 -}
 
-import Date (Day(..), Month(..), fromTime, toTime, Date)
-import Time (Time)
-import Random (..)
-import Random.Extra (map)
+import Date         exposing (Day(..), Month(..), fromTime, toTime, Date)
+import Time         exposing (Time)
+import Random       exposing (Generator, int, float)
+import Random.Extra exposing (map, selectWithDefault)
 
 {-| Generate a random day of the week.
 -}
 day : Generator Day
 day =
-  let intToDay int =
-        case int of
-          0 -> Mon
-          1 -> Tue
-          2 -> Wed
-          3 -> Thu
-          4 -> Fri
-          5 -> Sat
-          _ -> Sun
-  in
-    map intToDay (int 0 6)
+  selectWithDefault Mon
+    [ Mon
+    , Tue
+    , Wed
+    , Thu
+    , Fri
+    , Sat
+    , Sun
+    ]
 
 {-| Generate a random month of the year.
 -}
 month : Generator Month
 month =
-  let intToMonth int =
-        case int of
-          0   -> Jan
-          1   -> Feb
-          2   -> Mar
-          3   -> Apr
-          4   -> May
-          5   -> Jun
-          6   -> Jul
-          7   -> Aug
-          8   -> Sep
-          9   -> Oct
-          10  -> Nov
-          _   -> Dec
-  in
-    map intToMonth (int 0 11)
+  selectWithDefault Jan
+    [ Jan
+    , Feb
+    , Mar
+    , Apr
+    , May
+    , Jun
+    , Jul
+    , Aug
+    , Sep
+    , Oct
+    , Nov
+    , Dec
+    ]
 
 {-| Generate a random year given a start year and end year (alias for `int`)
 -}

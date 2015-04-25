@@ -6,24 +6,22 @@ module Random.Keyboard where
 
 -}
 
-import Keyboard (KeyCode)
 import List
-import Random (..)
-import Random.Extra (map)
+import Keyboard     exposing (KeyCode)
+import Random       exposing (Generator, int)
+import Random.Extra exposing (map, selectWithDefault)
 
 
 {-| Generate random Keyboard arrows input
 -}
 arrows : Generator { x : Int, y : Int }
 arrows =
-  let intToArrows int =
-        case int of
-          0 -> { x = 0, y = 0}
-          1 -> { x = 0, y = 1}
-          2 -> { x = 1, y = 0}
-          _ -> { x = 1, y = 1}
-  in
-    map intToArrows (int 0 3)
+  selectWithDefault { x = 0, y = 0 }
+    [ { x = 0, y = 0 }
+    , { x = 0, y = 1 }
+    , { x = 1, y = 0 }
+    , { x = 1, y = 1 }
+    ]
 
 {-| Generate a random Keyboard input.
 -}

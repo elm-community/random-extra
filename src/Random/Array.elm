@@ -6,9 +6,9 @@ module Random.Array where
 
 -}
 
-import Array (Array, fromList, empty)
-import Random (..)
-import Random.Extra (map, flatMap, constant)
+import Array        exposing (Array, fromList, empty)
+import Random       exposing (Generator, list, int)
+import Random.Extra exposing (map, flatMap, constant)
 
 {-| Generate a random array of given size given a random generator
 
@@ -29,4 +29,4 @@ a maximum length.
 -}
 rangeLengthArray : Int -> Int -> Generator a -> Generator (Array a)
 rangeLengthArray minLength maxLength generator =
-  flatMap (\len -> array len generator) (int minLength maxLength) 
+  flatMap (\len -> array len generator) (int minLength maxLength)

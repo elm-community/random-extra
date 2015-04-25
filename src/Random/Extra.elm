@@ -1,84 +1,14 @@
-module Random.Extra
-  ( constant
-  , emptyList
-  , rangeLengthList
-  , bool
-  , anyInt
-  , positiveInt
-  , negativeInt
-  , intGreaterThan
-  , intLessThan
-  , anyFloat
-  , positiveFloat
-  , negativeFloat
-  , floatGreaterThan
-  , floatLessThan
-  , probability
-  , negativeProbability
-  , absoluteProbability
-  , func
-  , func2
-  , func3
-  , func4
-  , func5
-  , func6
-  , apply
-  , (<<<)
-  , (>>>)
-  , select
-  , selectWithDefault
-  , map
-  , map2
-  , map3
-  , map4
-  , map5
-  , map6
-  , flatMap
-  , flatMap2
-  , flatMap3
-  , flatMap4
-  , flatMap5
-  , flatMap6
-  , zip
-  , zip3
-  , zip4
-  , zip5
-  , zip6
-  , andThen
-  , merge
-  , quickGenerate
-  , cappedGenerateUntil
-  , generateIterativelyUntil
-  , generateIterativelySuchThat
-  , generateUntil
-  , generateSuchThat
-  , maybeGenerateSuchThat
-  )where
+module Random.Extra where
 {-| Module providing extra functionality to the core Random module.
 
 # Constant Generators
-@docs constant, emptyList
+@docs constant
 
-# Boolean Generator
-@docs bool
-
-# Integer Generators
-@docs anyInt, positiveInt, negativeInt, intGreaterThan, intLessThan
-
-# Float Generators
-@docs anyFloat, positiveFloat, negativeFloat, floatGreaterThan, floatLessThan, probability, negativeProbability, absoluteProbability
-
-# List Generators
-@docs rangeLengthList
-
-# Function Generators
-@docs func, func2, func3, func4, func5, func6
-
-# Operations on Function Generators
-@docs apply, (<<<), (>>>)
+# Generator Transformers
+@docs flattenList
 
 # Select
-@docs select, selectWithDefault
+@docs select, selectWithDefault, frequency, merge
 
 # Maps
 @docs map, map2, map3, map4, map5, map6, mapConstraint
@@ -89,43 +19,102 @@ module Random.Extra
 # Zips
 @docs zip, zip3, zip4, zip5, zip6
 
-# Chaining Generators
-@docs andThen
+# Reducers
+@docs reduce, fold
 
-# Merging Generators
-@docs merge
+# Chaining Generators
+@docs andMap, andThen
+
+# Filtering Generators
+@docs keepIf, dropIf
 
 # Generate Functions
-@docs quickGenerate, cappedGenerateUntil, generateIterativelyUntil, generateIterativelySuchThat, generateUntil, maybeGenerateSuchThat, generateSuchThat
+@docs generateN, quickGenerate, cappedGenerateUntil, generateIterativelyUntil, generateIterativelySuchThat, generateUntil, generateSuchThat
 
 -}
 
-import Random (..)
+import Random       exposing (Generator, Seed, generate, customGenerator, list, int, float, initialSeed)
+import Utils        exposing (get)
 import List
+import Maybe
 
-
-get : Int -> List a -> Maybe a
-get index list =
-  if index < 0
-  then Nothing
-  else
-    case List.drop index list of
-      [] -> Nothing
-      x :: xs -> Just x
-
-
-{-| Generator that always returns the empty list.
+{-| Create a generator that chooses a generator from a tuple of generators
+based on the provided likelihood. The likelihood of a given generator being
+chosen is its likelihood divided by the sum of all likelihood. A default
+generator must be provided in the case that the list is empty or that the
+sum of the likelihoods is 0. Note that the absolute values of the likelihoods
+is always taken.
 -}
-emptyList : Generator (List a)
-emptyList =
-  constant []
+frequency : List (Float, Generator a) -> Generator a -> Generator a
+frequency pairs defaultGenerator =
+  let
+      frequencies : List Float
+      frequencies = List.map (abs << fst) pairs
 
-{-| Generate a random list of random length given a minimum length and
-a maximum length.
+      total : Float
+      total = List.sum frequencies * (toFloat <| List.length frequencies)
+  in
+      if total == 0
+      then
+        defaultGenerator
+      else
+        customGenerator <|
+          \seed ->
+            let
+                (randIndex, seed1) = generate (float 0 total) seed
+
+                index = floor randIndex
+
+                maybePair = get index pairs
+
+                generator = case maybePair of
+                  Nothing -> defaultGenerator
+                  Just (_ , gen) -> gen
+
+            in
+                generate generator seed
+
+{-| Convert a generator into a generator that only generates values
+that satisfy a given predicate.
+Note that if the predicate is unsatisfiable, the generator will not terminate.
 -}
-rangeLengthList : Int -> Int -> Generator a -> Generator (List a)
-rangeLengthList minLength maxLength generator =
-  flatMap (\len -> list len generator) (int minLength maxLength)
+keepIf : (a -> Bool) -> Generator a -> Generator a
+keepIf predicate generator =
+  let
+      gen seed =
+        let
+            (value, seed1) = generate generator seed
+        in
+            if predicate value
+            then
+              (value, seed1)
+            else
+              gen seed1
+  in
+      customGenerator gen
+
+
+{-| Convert a generator into a generator that only generates values
+that do not satisfy a given predicate.
+-}
+dropIf : (a -> Bool) -> Generator a -> Generator a
+dropIf predicate =
+  keepIf (\a -> not (predicate a))
+
+
+{-| Turn a list of generators into a generator of lists.
+-}
+flattenList : List (Generator a) -> Generator (List a)
+flattenList generators = case generators of
+  [] -> constant []
+  g :: gs ->
+    customGenerator <|
+      \seed ->
+        let (first, seed1)  = generate g seed
+            (rest , seed2)  = generate (flattenList gs) seed1
+        in
+            (first :: rest, seed2)
+
 
 {-| Generator that randomly selects an element from a list.
 -}
@@ -143,15 +132,7 @@ select list =
 -}
 selectWithDefault : a -> List a -> Generator a
 selectWithDefault defaultValue list =
-  customGenerator <|
-    (\seed ->
-        let (index, nextSeed) = generate (int 0 (List.length list - 1)) seed
-        in
-          case get index list of
-            Nothing     -> (defaultValue, nextSeed)
-            Just value  -> (value, nextSeed))
-
-
+  map (Maybe.withDefault defaultValue) (select list)
 
 
 {-| Create a generator that always returns the same value.
@@ -165,26 +146,11 @@ constant value =
           (value, seed1))
 
 
-
-{-| Random Bool generator
+{-| Apply a generator of functions to a generator of values.
+Useful for chaining generators.
 -}
-bool : Generator Bool
-bool =
-  customGenerator
-    (\seed ->
-        let (value1, seed1) = generate (int 0 1) seed
-            (value2, seed2) = generate (int 0 1) seed1
-        in
-          if (value1 + value2) == 1
-          then
-            (False, seed2)
-          else
-            (True, seed2))
-
-
-
-apply : Generator (a -> b) -> Generator a -> Generator b
-apply funcGenerator generator =
+andMap : Generator (a -> b) -> Generator a -> Generator b
+andMap funcGenerator generator =
   customGenerator <|
     (\seed ->
         let (f, seed1) = generate funcGenerator seed
@@ -193,164 +159,24 @@ apply funcGenerator generator =
           ((f a), seed2))
 
 
-{-| Generates a random function of one argument given a generator for the output.
+{-| Reduce a generator using a reducer and an initial value.
 -}
-func : Generator b -> Generator (a -> b)
-func generatorB =
-  customGenerator <|
-    (\seed ->
-        let (valueB, seed1) = generate generatorB seed
+reduce : (a -> b -> b) -> b -> Generator a -> Generator b
+reduce reducer initial generator =
+  let
+      gen seed =
+        let (value, nextSeed) = generate generator seed
+            nextValue = reducer value initial
         in
-          ((\a -> valueB), seed1))
-
-
-{-| Generates a random function of two arguments given a generator for the output.
--}
-func2 : Generator c -> Generator (a -> b -> c)
-func2 generatorC =
-  func (func generatorC)
-
-
-{-| Generates a random function of three arguments given a generator for the output.
--}
-func3 : Generator d -> Generator (a -> b -> c -> d)
-func3 generatorD =
-  func (func2 generatorD)
-
-
-{-| Generates a random function of four arguments given a generator for the output.
--}
-func4 : Generator e -> Generator (a -> b -> c -> d -> e)
-func4 generatorE =
-  func (func3 generatorE)
-
-
-{-| Generates a random function of five arguments given a generator for the output.
--}
-func5 : Generator f -> Generator (a -> b -> c -> d -> e -> f)
-func5 generatorF =
-  func (func4 generatorF)
-
-
-{-| Generates a random function of six arguments given a generator for the output.
--}
-func6 : Generator g -> Generator (a -> b -> c -> d -> e -> f -> g)
-func6 generatorG =
-  func (func5 generatorG)
-
-
-infixl 9 >>>
-{-| Compose two function generators. Analogous to `>>`
--}
-(>>>) : Generator (a -> b) -> Generator (b -> c) -> Generator (a -> c)
-(>>>) generatorAB generatorBC =
-  customGenerator <|
-    (\seed ->
-        let (f, seed1) = generate generatorAB seed
-            (g, seed2) = generate generatorBC seed1
-        in
-          (f >> g, seed2))
-
-
-infixr 9 <<<
-{-| Compose two function generators. Analogous to `<<`
--}
-(<<<) : Generator (b -> c) -> Generator (a -> b) -> Generator (a -> c)
-(<<<) generatorBC generatorAB =
-  customGenerator <|
-    (\seed ->
-        let (f, seed1) = generate generatorAB seed
-            (g, seed2) = generate generatorBC seed1
-        in
-          (f >> g, seed2))
-
-{-| Generator that generates any int that can be generate by the random generator algorithm.
--}
-anyInt : Generator Int
-anyInt = int minInt maxInt
-
-{-| Generator that generates a positive int
--}
-positiveInt : Generator Int
-positiveInt = int 1 maxInt
-
-{-| Generator that generates a negative int
--}
-negativeInt : Generator Int
-negativeInt = int minInt -1
-
-{-| Generator that generates an int greater than a given int
--}
-intGreaterThan : Int -> Generator Int
-intGreaterThan value = int (value + 1) maxInt
-
-{-| Generator that generates an int less than a given int
--}
-intLessThan : Int -> Generator Int
-intLessThan value = int minInt (value - 1)
-
-{-| Generator that generates any float
--}
-anyFloat : Generator Float
-anyFloat = float (toFloat minInt) (toFloat maxInt)
-
-{-| Generator that generates any positive float
--}
-positiveFloat : Generator Float
-positiveFloat = float 0 (toFloat maxInt)
-
-{-| Generator that generates any negative float
--}
-negativeFloat : Generator Float
-negativeFloat = float (toFloat minInt) 0
-
-{-| Generator that generates a float greater than a given float
--}
-floatGreaterThan : Float -> Generator Float
-floatGreaterThan value = float value (toFloat maxInt)
-
-{-| Generator that generates a float less than a given float
--}
-floatLessThan : Float -> Generator Float
-floatLessThan value = float (toFloat minInt) value
-
-{-| Generator that generates a float between 0 and 1
--}
-probability : Generator Float
-probability = float 0 1
-
-{-| Generator that generates a float between -1 and 0
--}
-negativeProbability : Generator Float
-negativeProbability = float -1 0
-
-{-| Generator that generates a float between - 1 and 1
--}
-absoluteProbability : Generator Float
-absoluteProbability = float -1 1
-
-{-}
-normal : Float -> Float -> Float -> Generator Float
-normal start end standardDeviation =
-  let normalDistribution mean stdDev x =
-        if stdDev == 0 then x
-        else
-          let scale = 1 / (stdDev * sqrt (2 * pi))
-              exponent = ((x - mean) * (x - mean)) / (2 * stdDev * stdDev)
-          in
-            scale * (e ^ -exponent)
-
+            (nextValue, nextSeed)
   in
-    map (normalDistribution ((end - start) / 2) standardDeviation) (float start end)
+      customGenerator gen
 
-standardNormal : Generator Float
-standardNormal = normal (toFloat minInt + 1) (toFloat maxInt) 1
 
-gaussian : Float -> Float -> Float -> Generator Float
-gaussian = normal
-
+{-| Alias for reduce.
 -}
-
+fold : (a -> b -> b) -> b -> Generator a -> Generator b
+fold = reduce
 
 
 
@@ -510,43 +336,40 @@ map6 f generatorA generatorB generatorC generatorD generatorE generatorF =
         in
           (f valueA valueB valueC valueD valueE valueF, seed6))
 
+{-| Choose between two generators with a 50-50 chance.
+Useful for merging two generators that cover different areas of the same type.
+-}
 merge : Generator a -> Generator a -> Generator a
 merge generator1 generator2 =
-  customGenerator
-    (\seed ->
-        let value = quickGenerate bool seed
-        in
-          if value == True
-          then
-            generate generator1 seed
-          else
-            generate generator2 seed)
+  frequency
+    [ (1, generator1)
+    , (1, generator2)
+    ] generator1
 
 
-generateSuchThat : (a -> Bool) -> Generator a -> Seed -> (a, Seed)
-generateSuchThat predicate generator seed =
-  let (value, nextSeed) = generate generator seed
-  in
-    if predicate value
-    then
-      (value, nextSeed)
-    else
-      generateSuchThat predicate generator nextSeed
-
-maybeGenerateSuchThat : Int -> (a -> Bool) -> Generator a -> Seed -> Maybe (a, Seed)
-maybeGenerateSuchThat numberOfTries predicate generator seed =
-  if numberOfTries <= 0
-  then Nothing
+{-| Generate n values from a generator.
+-}
+generateN : Int -> Generator a -> Seed -> List a
+generateN n generator seed =
+  if n <= 0
+  then
+    []
   else
     let (value, nextSeed) = generate generator seed
     in
-      if predicate value
-      then
-        Just (value, nextSeed)
-      else
-        maybeGenerateSuchThat (numberOfTries - 1) predicate generator nextSeed
+        value :: generateN (n - 1) generator nextSeed
 
 
+{-| Generate a value from a generator that satisfies a given predicate
+-}
+generateSuchThat : (a -> Bool) -> Generator a -> Seed -> (a, Seed)
+generateSuchThat predicate generator seed =
+  generate (keepIf predicate generator) seed
+
+
+{-| Generate a list of values from a generator until the given predicate
+is satisfied
+-}
 generateUntil : (a -> Bool) -> Generator a -> Seed -> List a
 generateUntil predicate generator seed =
   let (value, nextSeed) = generate generator seed
@@ -558,22 +381,23 @@ generateUntil predicate generator seed =
       []
 
 
+{-| Generate iteratively a list of values from a generator parametrized by
+the value of the iterator until either the given maxlength is reached or
+the predicate ceases to be satisfied.
+
+    generateIterativelySuchThat maxLength predicate constructor seed
+-}
 generateIterativelySuchThat : Int -> (a -> Bool) -> (Int -> Generator a) -> Seed -> List a
-generateIterativelySuchThat maxLength predicate constructor seed =
-  let notPredicate = (\value -> not (predicate value))
-
-      iterate index =
-        if index >= maxLength
-        then
-          []
-        else
-          (generateUntil notPredicate (constructor index) seed) `List.append`
-          (iterate (index + 1))
-
-  in
-    iterate 0
+generateIterativelySuchThat maxLength predicate =
+  generateIterativelyUntil maxLength (\a -> not (predicate a))
 
 
+{-| Generate iteratively a list of values from a generator parametrized by
+the value of the iterator until either the given maxlength is reached or
+the predicate is satisfied.
+
+    generateIterativelyUntil maxLength predicate constructor seed
+-}
 generateIterativelyUntil : Int -> (a -> Bool) -> (Int -> Generator a) -> Seed -> List a
 generateIterativelyUntil maxLength predicate constructor seed =
   let iterate index =
@@ -581,13 +405,19 @@ generateIterativelyUntil maxLength predicate constructor seed =
         then
           []
         else
-          (generateUntil predicate (constructor index) seed) `List.append`
+          (generateUntil predicate (constructor index) seed) ++
           (iterate (index + 1))
 
   in
     iterate 0
 
 
+
+{-| Generate iteratively a list of values from a generator until either
+the given maxlength is reached or the predicate is satisfied.
+
+    cappedGenerateUntil maxLength predicate generator seed
+-}
 cappedGenerateUntil : Int -> (a -> Bool) -> Generator a -> Seed -> List a
 cappedGenerateUntil maxGenerations predicate generator seed =
   if maxGenerations <= 0
@@ -603,19 +433,16 @@ cappedGenerateUntil maxGenerations predicate generator seed =
         []
 
 
-generateWithDefault : List a -> Generator a -> Seed -> List (a, Seed)
-generateWithDefault list generator seed =
-  case list of
-    [] -> [generate generator seed]
-    x :: xs ->
-      let (value, nextSeed) = generate generator seed
-      in
-        (x, nextSeed) :: generateWithDefault xs generator nextSeed
 
-quickGenerate : Generator a -> Seed -> a
-quickGenerate generator seed =
-  (fst (generate generator seed))
+{-| Quickly generate a value from a generator disregarding seeds.
+-}
+quickGenerate : Generator a -> a
+quickGenerate generator =
+  (fst (generate generator (initialSeed 1)))
 
+{-| Apply a constraint onto a generator and returns both the input to
+the constraint and the result of applying the constaint.
+-}
 mapConstraint : (a -> b) -> Generator a -> Generator (a, b)
 mapConstraint constraint generator =
   customGenerator
