@@ -1,4 +1,13 @@
 module Random.Float where
+{-|
+
+# Generators
+@docs anyFloat, positiveFloat, negativeFloat, floatGreaterThan, floatLessThan, probability, negativeProbability, unitRange
+
+# Gaussian Generators
+@docs normal, standardNormal, gaussian
+
+-}
 
 import Random exposing (Generator, float, maxInt, minInt)
 
@@ -40,10 +49,13 @@ negativeProbability = float -1 0
 
 {-| Generator that generates a float between - 1 and 1
 -}
-absoluteProbability : Generator Float
-absoluteProbability = float -1 1
+unitRange : Generator Float
+unitRange = float -1 1
 
-{-}
+
+{-| Create a generator of floats that is normally distributed with
+given minimum, maximum, and standard deviation.
+-}
 normal : Float -> Float -> Float -> Generator Float
 normal start end standardDeviation =
   let normalDistribution mean stdDev x =
@@ -57,10 +69,13 @@ normal start end standardDeviation =
   in
     map (normalDistribution ((end - start) / 2) standardDeviation) (float start end)
 
+{-| Generator that follows a standard normal distribution (as opposed to
+a uniform distribution)
+-}
 standardNormal : Generator Float
 standardNormal = normal (toFloat minInt + 1) (toFloat maxInt) 1
 
+{-| Alias for `normal`.
+-}
 gaussian : Float -> Float -> Float -> Generator Float
 gaussian = normal
-
--}
