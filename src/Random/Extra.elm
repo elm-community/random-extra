@@ -4,10 +4,6 @@ module Random.Extra where
 # Constant Generators
 @docs constant, emptyList, flattenList
 
-# Boolean Generator
-@docs bool
-
-
 # List Generators
 @docs rangeLengthList
 
@@ -35,6 +31,7 @@ module Random.Extra where
 -}
 
 import Random exposing (..)
+import Random.Bool exposing (bool)
 import List
 
 
@@ -110,23 +107,6 @@ constant value =
         let (_, seed1) = generate (int 0 1) seed
         in
           (value, seed1))
-
-
-
-{-| Random Bool generator
--}
-bool : Generator Bool
-bool =
-  customGenerator
-    (\seed ->
-        let (value1, seed1) = generate (int 0 1) seed
-            (value2, seed2) = generate (int 0 1) seed1
-        in
-          if (value1 + value2) == 1
-          then
-            (False, seed2)
-          else
-            (True, seed2))
 
 
 
