@@ -16,7 +16,7 @@ module Random.Signal where
 
 import Signal       exposing (Signal)
 import Random       exposing (Generator, Seed)
-import Random.Extra exposing (map)
+import Random.Extra exposing (map, reduce)
 import Time         exposing (Time)
 
 {-| Generates constant signals.
@@ -85,11 +85,30 @@ Here, the Elm Architecture is interpreted as follows:
         (Signal.foldp update initialModel actions)
 
 
-To use:
-    application initialModel actionGenerator update view
+How to use:
+
+    applicationGenerator =
+      application initialModel actionGenerator update view
+
+    main =
+      generate applicationGenerator
 
 -}
-application : model -> Generator action -> (action -> model -> model) -> (model -> view) -> Signal view
+application : model -> Generator action -> (action -> model -> model) -> (model -> view) -> Generator view
 application initialModel actionGenerator update view =
+  map view
+    (reduce update initialModel actionGenerator)
+
+{-| Create a running signal from an application that follows the Elm Architecture.
+This is analogous to `application` and works better as it avoids issues with
+`Random.Extra.reduce`.
+
+How to use:
+
+    main =
+      run initialModel actionGenerator update view
+-}
+run : model -> Generator action -> (action -> model -> model) -> (model -> view) -> Signal view
+run initialModel actionGenerator update view =
   Signal.map view
     (Signal.foldp update initialModel (generate actionGenerator))
