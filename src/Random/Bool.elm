@@ -1,4 +1,8 @@
 module Random.Bool where
+{-|
+# Generators
+@docs bool
+-}
 
 import Random exposing (Generator, generate, customGenerator, int)
 
