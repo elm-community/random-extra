@@ -1,7 +1,7 @@
 module Random.List where
 
-import Random       exposing (Generator, int, constant)
-import Random.Extra exposing (flatMap)
+import Random       exposing (Generator, int, list)
+import Random.Extra exposing (flatMap, constant)
 
 {-| Generator that always returns the empty list.
 -}

@@ -41,7 +41,7 @@ import Utils exposing (get)
 -}
 flattenList : List (Generator a) -> Generator (List a)
 flattenList generators = case generators of
-  [] -> emptyList
+  [] -> constant []
   g :: gs ->
     customGenerator <|
       \seed ->
