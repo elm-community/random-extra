@@ -68,7 +68,7 @@ generateEvery time generator =
 {-| Generate a signal from a random generator that updates 60 times per second.
 -}
 generate : Generator a -> Signal a
-generate generator =
+generate =
   generateEvery (1000 / 60)
 
 
