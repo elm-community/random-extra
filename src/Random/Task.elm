@@ -1,4 +1,19 @@
 module Random.Task where
+{-|
+
+# Generators
+@docs task, error, threadedTask
+
+# Timeout Generators
+@docs timeout, rangeLengthTimeout
+
+# Chaining Task Generators
+@docs sequence, parallel, optional
+
+# Generators that communicate with mailboxes
+@docs send, broadcast
+
+-}
 
 import Task         exposing (Task, ThreadID, spawn, succeed, fail, sleep)
 import Task.Extra   as Task
