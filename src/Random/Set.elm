@@ -1,6 +1,12 @@
 module Random.Set where
 {-| List of Random Set Generators
 
+# Generators
+@docs empty, singleton, set, notInSet
+
+# Combinators
+@docs select, selectWithDefault
+
 -}
 
 import Set          exposing (Set)
