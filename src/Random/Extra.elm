@@ -37,13 +37,6 @@ import Utils exposing (get)
 
 
 
-
-{-| Generator that always returns the empty list.
--}
-emptyList : Generator (List a)
-emptyList =
-  constant []
-
 {-| Turn a list of generators into a generator of lists.
 -}
 flattenList : List (Generator a) -> Generator (List a)
@@ -57,12 +50,6 @@ flattenList generators = case generators of
         in
             (first :: rest, seed2)
 
-{-| Generate a random list of random length given a minimum length and
-a maximum length.
--}
-rangeLengthList : Int -> Int -> Generator a -> Generator (List a)
-rangeLengthList minLength maxLength generator =
-  flatMap (\len -> list len generator) (int minLength maxLength)
 
 {-| Generator that randomly selects an element from a list.
 -}
