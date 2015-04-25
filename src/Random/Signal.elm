@@ -84,6 +84,10 @@ Here, the Elm Architecture is interpreted as follows:
       Signal.map view
         (Signal.foldp update initialModel actions)
 
+
+To use:
+    application initialModel actionGenerator update view
+
 -}
 application : model -> Generator action -> (action -> model -> model) -> (model -> view) -> Signal view
 application initialModel actionGenerator update view =
