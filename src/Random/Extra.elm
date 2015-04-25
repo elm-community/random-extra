@@ -65,7 +65,25 @@ frequency pairs defaultGenerator =
                 generate generator seed
 
 
+keepIf : (a -> Bool) -> Generator a -> Generator a
+keepIf predicate generator =
+  let
+      gen seed =
+        let
+            (value, seed1) = generate generator seed
+        in
+            if predicate value
+            then
+              (value, seed1)
+            else
+              gen seed1
+  in
+      customGenerator gen
 
+
+dropIf : (a -> Bool) -> Generator a -> Generator a
+dropIf predicate =
+  keepIf (\a -> not (predicate a))
 
 
 {-| Turn a list of generators into a generator of lists.
