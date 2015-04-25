@@ -2,10 +2,10 @@ module Random.Extra where
 {-| Module providing extra functionality to the core Random module.
 
 # Constant Generators
-@docs constant, emptyList, flattenList
+@docs constant
 
-# List Generators
-@docs rangeLengthList
+# Generator Transformers
+@docs flattenList
 
 # Select
 @docs select, selectWithDefault
