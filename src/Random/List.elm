@@ -1,4 +1,10 @@
 module Random.List where
+{-|
+
+# Generators
+@docs emptyList, rangeLengthList
+
+-}
 
 import Random       exposing (Generator, int, list)
 import Random.Extra exposing (flatMap, constant)
