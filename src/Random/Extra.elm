@@ -33,6 +33,7 @@ module Random.Extra where
 import Random       exposing (Generator, Seed, generate, customGenerator, list, int, float, initialSeed)
 import Utils        exposing (get)
 import List
+import Maybe
 
 {-| Create a generator that chooses a generator from a tuple of generators
 based on the provided likelihood. The likelihood of a given generator being
@@ -128,15 +129,7 @@ select list =
 -}
 selectWithDefault : a -> List a -> Generator a
 selectWithDefault defaultValue list =
-  customGenerator <|
-    (\seed ->
-        let (index, nextSeed) = generate (int 0 (List.length list - 1)) seed
-        in
-          case get index list of
-            Nothing     -> (defaultValue, nextSeed)
-            Just value  -> (value, nextSeed))
-
-
+  map (Maybe.withDefault defaultValue) (select list)
 
 
 {-| Create a generator that always returns the same value.
