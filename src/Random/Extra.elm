@@ -49,7 +49,7 @@ frequency pairs defaultGenerator =
       frequencies = List.map (abs << fst) pairs
 
       total : Float
-      total = List.sum frequencies
+      total = List.sum frequencies * (toFloat <| List.length frequencies)
   in
       if total == 0
       then
