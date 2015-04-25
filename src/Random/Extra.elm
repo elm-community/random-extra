@@ -4,15 +4,7 @@ module Random.Extra
   , flattenList
   , rangeLengthList
   , bool
-  , func
-  , func2
-  , func3
-  , func4
-  , func5
-  , func6
-  , apply
-  , (<<<)
-  , (>>>)
+  , andMap
   , select
   , selectWithDefault
   , map
@@ -55,12 +47,6 @@ module Random.Extra
 # List Generators
 @docs rangeLengthList
 
-# Function Generators
-@docs func, func2, func3, func4, func5, func6
-
-# Operations on Function Generators
-@docs apply, (<<<), (>>>)
-
 # Select
 @docs select, selectWithDefault
 
@@ -74,7 +60,7 @@ module Random.Extra
 @docs zip, zip3, zip4, zip5, zip6
 
 # Chaining Generators
-@docs andThen
+@docs andMap, andThen
 
 # Merging Generators
 @docs merge
@@ -180,8 +166,8 @@ bool =
 
 
 
-apply : Generator (a -> b) -> Generator a -> Generator b
-apply funcGenerator generator =
+andMap : Generator (a -> b) -> Generator a -> Generator b
+andMap funcGenerator generator =
   customGenerator <|
     (\seed ->
         let (f, seed1) = generate funcGenerator seed
@@ -189,77 +175,6 @@ apply funcGenerator generator =
         in
           ((f a), seed2))
 
-
-{-| Generates a random function of one argument given a generator for the output.
--}
-func : Generator b -> Generator (a -> b)
-func generatorB =
-  customGenerator <|
-    (\seed ->
-        let (valueB, seed1) = generate generatorB seed
-        in
-          ((\a -> valueB), seed1))
-
-
-{-| Generates a random function of two arguments given a generator for the output.
--}
-func2 : Generator c -> Generator (a -> b -> c)
-func2 generatorC =
-  func (func generatorC)
-
-
-{-| Generates a random function of three arguments given a generator for the output.
--}
-func3 : Generator d -> Generator (a -> b -> c -> d)
-func3 generatorD =
-  func (func2 generatorD)
-
-
-{-| Generates a random function of four arguments given a generator for the output.
--}
-func4 : Generator e -> Generator (a -> b -> c -> d -> e)
-func4 generatorE =
-  func (func3 generatorE)
-
-
-{-| Generates a random function of five arguments given a generator for the output.
--}
-func5 : Generator f -> Generator (a -> b -> c -> d -> e -> f)
-func5 generatorF =
-  func (func4 generatorF)
-
-
-{-| Generates a random function of six arguments given a generator for the output.
--}
-func6 : Generator g -> Generator (a -> b -> c -> d -> e -> f -> g)
-func6 generatorG =
-  func (func5 generatorG)
-
-
-infixl 9 >>>
-{-| Compose two function generators. Analogous to `>>`
--}
-(>>>) : Generator (a -> b) -> Generator (b -> c) -> Generator (a -> c)
-(>>>) generatorAB generatorBC =
-  customGenerator <|
-    (\seed ->
-        let (f, seed1) = generate generatorAB seed
-            (g, seed2) = generate generatorBC seed1
-        in
-          (f >> g, seed2))
-
-
-infixr 9 <<<
-{-| Compose two function generators. Analogous to `<<`
--}
-(<<<) : Generator (b -> c) -> Generator (a -> b) -> Generator (a -> c)
-(<<<) generatorBC generatorAB =
-  customGenerator <|
-    (\seed ->
-        let (f, seed1) = generate generatorAB seed
-            (g, seed2) = generate generatorBC seed1
-        in
-          (f >> g, seed2))
 
 
 
