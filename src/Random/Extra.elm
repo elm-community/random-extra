@@ -29,11 +29,11 @@ module Random.Extra where
 @docs merge
 
 # Generate Functions
-@docs quickGenerate, cappedGenerateUntil, generateIterativelyUntil, generateIterativelySuchThat, generateUntil, maybeGenerateSuchThat, generateSuchThat
+@docs quickGenerate, cappedGenerateUntil, generateIterativelyUntil, generateIterativelySuchThat, generateUntil, generateSuchThat
 
 -}
 
-import Random       exposing (Generator, Seed, generate, customGenerator, list, int, float)
+import Random       exposing (Generator, Seed, generate, customGenerator, list, int, float, initialSeed)
 import Utils        exposing (get)
 import List
 
@@ -323,6 +323,9 @@ map6 f generatorA generatorB generatorC generatorD generatorE generatorF =
         in
           (f valueA valueB valueC valueD valueE valueF, seed6))
 
+{-| Choose between two generators with a 50-50 chance.
+Useful for merging two generators that cover different areas of the same type.
+-}
 merge : Generator a -> Generator a -> Generator a
 merge generator1 generator2 =
   frequency
@@ -330,30 +333,17 @@ merge generator1 generator2 =
     , (1, generator2)
     ] generator1
 
+
+{-| Generate a value from a generator that satisfies a given predicate
+-}
 generateSuchThat : (a -> Bool) -> Generator a -> Seed -> (a, Seed)
 generateSuchThat predicate generator seed =
-  let (value, nextSeed) = generate generator seed
-  in
-    if predicate value
-    then
-      (value, nextSeed)
-    else
-      generateSuchThat predicate generator nextSeed
-
-maybeGenerateSuchThat : Int -> (a -> Bool) -> Generator a -> Seed -> Maybe (a, Seed)
-maybeGenerateSuchThat numberOfTries predicate generator seed =
-  if numberOfTries <= 0
-  then Nothing
-  else
-    let (value, nextSeed) = generate generator seed
-    in
-      if predicate value
-      then
-        Just (value, nextSeed)
-      else
-        maybeGenerateSuchThat (numberOfTries - 1) predicate generator nextSeed
+  generate (keepIf predicate generator) seed
 
 
+{-| Generate a list of values from a generator until the given predicate
+is satisfied
+-}
 generateUntil : (a -> Bool) -> Generator a -> Seed -> List a
 generateUntil predicate generator seed =
   let (value, nextSeed) = generate generator seed
@@ -365,22 +355,23 @@ generateUntil predicate generator seed =
       []
 
 
+{-| Generate iteratively a list of values from a generator parametrized by
+the value of the iterator until either the given maxlength is reached or
+the predicate ceases to be satisfied.
+
+    generateIterativelySuchThat maxLength predicate constructor seed
+-}
 generateIterativelySuchThat : Int -> (a -> Bool) -> (Int -> Generator a) -> Seed -> List a
-generateIterativelySuchThat maxLength predicate constructor seed =
-  let notPredicate = (\value -> not (predicate value))
-
-      iterate index =
-        if index >= maxLength
-        then
-          []
-        else
-          (generateUntil notPredicate (constructor index) seed) ++
-          (iterate (index + 1))
-
-  in
-    iterate 0
+generateIterativelySuchThat maxLength predicate =
+  generateIterativelyUntil maxLength (\a -> not (predicate a))
 
 
+{-| Generate iteratively a list of values from a generator parametrized by
+the value of the iterator until either the given maxlength is reached or
+the predicate is satisfied.
+
+    generateIterativelyUntil maxLength predicate constructor seed
+-}
 generateIterativelyUntil : Int -> (a -> Bool) -> (Int -> Generator a) -> Seed -> List a
 generateIterativelyUntil maxLength predicate constructor seed =
   let iterate index =
@@ -388,13 +379,19 @@ generateIterativelyUntil maxLength predicate constructor seed =
         then
           []
         else
-          (generateUntil predicate (constructor index) seed) `List.append`
+          (generateUntil predicate (constructor index) seed) ++
           (iterate (index + 1))
 
   in
     iterate 0
 
 
+
+{-| Generate iteratively a list of values from a generator until either
+the given maxlength is reached or the predicate is satisfied.
+
+    cappedGenerateUntil maxLength predicate generator seed
+-}
 cappedGenerateUntil : Int -> (a -> Bool) -> Generator a -> Seed -> List a
 cappedGenerateUntil maxGenerations predicate generator seed =
   if maxGenerations <= 0
@@ -410,19 +407,16 @@ cappedGenerateUntil maxGenerations predicate generator seed =
         []
 
 
-generateWithDefault : List a -> Generator a -> Seed -> List (a, Seed)
-generateWithDefault list generator seed =
-  case list of
-    [] -> [generate generator seed]
-    x :: xs ->
-      let (value, nextSeed) = generate generator seed
-      in
-        (x, nextSeed) :: generateWithDefault xs generator nextSeed
 
-quickGenerate : Generator a -> Seed -> a
-quickGenerate generator seed =
-  (fst (generate generator seed))
+{-| Quickly generate a value from a generator disregarding seeds.
+-}
+quickGenerate : Generator a -> a
+quickGenerate generator =
+  (fst (generate generator (initialSeed 1)))
 
+{-| Apply a constraint onto a generator and returns both the input to
+the constraint and the result of applying the constaint.
+-}
 mapConstraint : (a -> b) -> Generator a -> Generator (a, b)
 mapConstraint constraint generator =
   customGenerator
