@@ -38,6 +38,13 @@ import Random.Bool  exposing (bool)
 import Utils        exposing (get)
 import List
 
+{-| Create a generator that chooses a generator from a tuple of generators
+based on the provided likelihood. The likelihood of a given generator being
+chosen is its likelihood divided by the sum of all likelihood. A default
+generator must be provided in the case that the list is empty or that the
+sum of the likelihoods is 0. Note that the absolute values of the likelihoods
+is always taken.
+-}
 frequency : List (Float, Generator a) -> Generator a -> Generator a
 frequency pairs defaultGenerator =
   let
@@ -366,7 +373,7 @@ generateIterativelySuchThat maxLength predicate constructor seed =
         then
           []
         else
-          (generateUntil notPredicate (constructor index) seed) `List.append`
+          (generateUntil notPredicate (constructor index) seed) ++
           (iterate (index + 1))
 
   in
