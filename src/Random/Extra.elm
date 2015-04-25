@@ -19,6 +19,9 @@ module Random.Extra where
 # Zips
 @docs zip, zip3, zip4, zip5, zip6
 
+# Reducers
+@docs reduce, fold
+
 # Chaining Generators
 @docs andMap, andThen
 
@@ -154,6 +157,26 @@ andMap funcGenerator generator =
             (a, seed2) = generate generator seed1
         in
           ((f a), seed2))
+
+
+{-| Reduce a generator using a reducer and an initial value.
+-}
+reduce : (a -> b -> b) -> b -> Generator a -> Generator b
+reduce reducer initial generator =
+  let
+      gen seed =
+        let (value, nextSeed) = generate generator seed
+            nextValue = reducer value initial
+        in
+            (nextValue, nextSeed)
+  in
+      customGenerator gen
+
+
+{-| Alias for reduce.
+-}
+fold : (a -> b -> b) -> b -> Generator a -> Generator b
+fold = reduce
 
 
 
