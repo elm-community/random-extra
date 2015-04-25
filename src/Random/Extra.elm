@@ -33,16 +33,9 @@ module Random.Extra where
 import Random exposing (..)
 import Random.Bool exposing (bool)
 import List
+import Utils exposing (get)
 
 
-get : Int -> List a -> Maybe a
-get index list =
-  if index < 0
-  then Nothing
-  else
-    case List.drop index list of
-      [] -> Nothing
-      x :: xs -> Just x
 
 
 {-| Generator that always returns the empty list.
