@@ -1,8 +1,14 @@
 module Random.Int where
+{-|
 
-import Random       exposing (Generator, int, minInt, maxInt)
+# Generators
+@docs anyInt, positiveInt, negativeInt, intGreaterThan, intLessThan
+-}
 
-{-| Generator that generates any int that can be generate by the random generator algorithm.
+import Random exposing (Generator, int, minInt, maxInt)
+
+{-| Generator that generates any int that can be generate by the
+random generator algorithm.
 -}
 anyInt : Generator Int
 anyInt = int minInt maxInt
