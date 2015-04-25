@@ -28,7 +28,7 @@ module Random.Extra where
 # Filtering Generators
 @docs keepIf, dropIf
 
-# Generate Functions
+# Functions that generate random values from Generators
 @docs generateN, quickGenerate, cappedGenerateUntil, generateIterativelyUntil, generateIterativelySuchThat, generateUntil, generateSuchThat
 
 -}
