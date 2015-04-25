@@ -28,12 +28,21 @@ notInSet : Set comparable -> Generator comparable -> Generator comparable
 notInSet set generator =
   dropIf (flip Set.member set) generator
 
-{-| A generator that creates values from a given set.
--}
-inSet : Set comparable -> Generator comparable -> Generator comparable
-inSet set generator =
-  keepIf (flip Set.member set) generator
 
+
+{-| Generate values from a set.
+Analogous to `Random.Extra.select` but with sets
+-}
+select : Set comparable -> Generator (Maybe comparable)
+select set =
+  Random.Extra.select (Set.toList set)
+
+{-| Generate values from a set or a default value.
+Analogous to `Random.Extra.selectWithDefault` but with sets
+-}
+selectWithDefault : comparable -> Set comparable -> Generator comparable
+selectWithDefault default set =
+  Random.Extra.selectWithDefault default (Set.toList set)
 
 {-| Generate a set of size at most given maxLength from a generator.
 -}
