@@ -9,7 +9,7 @@ module Random.Keyboard where
 import List
 import Keyboard     exposing (KeyCode)
 import Random       exposing (Generator, int)
-import Random.Extra exposing (map)
+import Random.Extra exposing (map, selectWithDefault)
 
 
 {-| Generate random Keyboard arrows input
@@ -22,7 +22,7 @@ arrows =
     , { x = 1, y = 0 }
     , { x = 1, y = 1 }
     ]
-    
+
 {-| Generate a random Keyboard input.
 -}
 keyCode : Generator KeyCode
