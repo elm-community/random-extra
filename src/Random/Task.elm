@@ -1,5 +1,5 @@
 module Random.Task where
-{-|
+{-| List of Task Generators
 
 # Generators
 @docs task, error, threadedTask

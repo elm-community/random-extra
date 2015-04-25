@@ -1,5 +1,5 @@
 module Random.Result where
-{-|
+{-| List of Result Generators
 
 # Generators
 @docs ok, error, result
@@ -35,7 +35,7 @@ This is simply implemented as follows:
         ] (ok okGenerator)
 
 If you want to generate results with a different frequency, tweak those
-numbers to your bidding in your own custom generators. 
+numbers to your bidding in your own custom generators.
 -}
 result : Generator error -> Generator value -> Generator (Result error value)
 result errorGenerator okGenerator =

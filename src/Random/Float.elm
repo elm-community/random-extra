@@ -1,5 +1,5 @@
 module Random.Float where
-{-|
+{-| List of Float Generators
 
 # Generators
 @docs anyFloat, positiveFloat, negativeFloat, floatGreaterThan, floatLessThan, probability, negativeProbability, unitRange

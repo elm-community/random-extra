@@ -1,5 +1,5 @@
 module Random.Int where
-{-|
+{-| List of Int Generators
 
 # Generators
 @docs anyInt, positiveInt, negativeInt, intGreaterThan, intLessThan

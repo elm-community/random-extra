@@ -1,5 +1,5 @@
 module Random.Mailbox where
-{-|
+{-| List of Mailbox Generators
 
 # Generators
 @docs mailbox, address

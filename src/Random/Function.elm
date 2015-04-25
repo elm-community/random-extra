@@ -1,5 +1,5 @@
 module Random.Function where
-{-|
+{-| List of Function Generators
 
 # Generators
 @docs func, func2, func3, func4, func5, func6

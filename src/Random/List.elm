@@ -1,5 +1,5 @@
 module Random.List where
-{-|
+{-| List of List Generators
 
 # Generators
 @docs emptyList, rangeLengthList

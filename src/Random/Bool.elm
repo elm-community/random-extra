@@ -1,5 +1,5 @@
 module Random.Bool where
-{-|
+{-| List of Bool Generators
 
 # Generators
 @docs bool
