@@ -153,7 +153,9 @@ constant value =
           (value, seed1))
 
 
-
+{-| Apply a generator of functions to a generator of values.
+Useful for chaining generators.
+-}
 andMap : Generator (a -> b) -> Generator a -> Generator b
 andMap funcGenerator generator =
   customGenerator <|
