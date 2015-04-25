@@ -4,7 +4,7 @@ module Random.Set where
 -}
 
 import Set          exposing (Set)
-import Random       exposing (Generator)
+import Random       exposing (Generator, list)
 import Random.Extra exposing (constant, map, dropIf, keepIf)
 
 
@@ -34,5 +34,9 @@ inSet : Set comparable -> Generator comparable -> Generator comparable
 inSet set generator =
   keepIf (flip Set.member set) generator
 
---set : Int -> Generator comparable -> Generator (Set comparable)
---set maxLength generator =
+
+{-| Generate a set of size at most given maxLength from a generator.
+-}
+set : Int -> Generator comparable -> Generator (Set comparable)
+set maxLength generator =
+  map Set.fromList (list maxLength generator)
