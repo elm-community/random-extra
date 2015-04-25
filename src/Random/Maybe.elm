@@ -2,7 +2,8 @@ module Random.Maybe where
 {-| List of Maybe Generators
 
 # Generators
-@docs maybe
+@docs maybe, withDefault, withDefaultGenerator
+
 -}
 
 import Random       exposing (Generator)
