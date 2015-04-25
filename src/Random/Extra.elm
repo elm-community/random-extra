@@ -26,7 +26,7 @@ module Random.Extra where
 @docs keepIf, dropIf
 
 # Generate Functions
-@docs quickGenerate, cappedGenerateUntil, generateIterativelyUntil, generateIterativelySuchThat, generateUntil, generateSuchThat
+@docs generateN, quickGenerate, cappedGenerateUntil, generateIterativelyUntil, generateIterativelySuchThat, generateUntil, generateSuchThat
 
 -}
 
@@ -322,6 +322,19 @@ merge generator1 generator2 =
     [ (1, generator1)
     , (1, generator2)
     ] generator1
+
+
+{-| Generate n values from a generator.
+-}
+generateN : Int -> Generator a -> Seed -> List a
+generateN n generator seed =
+  if n <= 0
+  then
+    []
+  else
+    let (value, nextSeed) = generate generator seed
+    in
+        value :: generateN (n - 1) generator nextSeed
 
 
 {-| Generate a value from a generator that satisfies a given predicate
