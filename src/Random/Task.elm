@@ -2,7 +2,7 @@ module Random.Task where
 {-| List of Task Generators
 
 # Generators
-@docs task, error, threadedTask
+@docs task, error, spawn
 
 # Timeout Generators
 @docs timeout, rangeLengthTimeout
@@ -15,7 +15,7 @@ module Random.Task where
 
 -}
 
-import Task         exposing (Task, ThreadID, spawn, succeed, fail, sleep)
+import Task         exposing (Task, ThreadID, succeed, fail, sleep)
 import Task.Extra   as Task
 import Random       exposing (Generator, float)
 import Random.Extra exposing (map, constant, flatMap)
@@ -51,9 +51,9 @@ rangeLengthTimeout minTime maxTime =
 {-| Generate a task that is spawned in some independent thread given a
 task generator
 -}
-threadedTask : Generator (Task x value) -> Generator (Task y ThreadID)
-threadedTask generator =
-  map spawn generator
+spawn : Generator (Task x value) -> Generator (Task y ThreadID)
+spawn generator =
+  map Task.spawn generator
 
 
 {-| Generate a sequence of tasks that are run in series from a list of tasks
