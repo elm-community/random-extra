@@ -30,10 +30,10 @@ module Random.Extra where
 
 -}
 
-import Random exposing (..)
-import Random.Bool exposing (bool)
+import Random       exposing (Generator, Seed, generate, customGenerator, list, int)
+import Random.Bool  exposing (bool)
+import Utils        exposing (get)
 import List
-import Utils exposing (get)
 
 
 
