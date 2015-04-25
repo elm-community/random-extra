@@ -8,7 +8,7 @@ module Random.Extra where
 @docs flattenList
 
 # Select
-@docs select, selectWithDefault, frequency
+@docs select, selectWithDefault, frequency, merge
 
 # Maps
 @docs map, map2, map3, map4, map5, map6, mapConstraint
@@ -24,9 +24,6 @@ module Random.Extra where
 
 # Filtering Generators
 @docs keepIf, dropIf
-
-# Merging Generators
-@docs merge
 
 # Generate Functions
 @docs quickGenerate, cappedGenerateUntil, generateIterativelyUntil, generateIterativelySuchThat, generateUntil, generateSuchThat
