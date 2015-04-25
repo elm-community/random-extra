@@ -11,7 +11,7 @@ module Random.Signal where
 @docs generate, generateEvery
 
 # Generate a run of an application
-@docs application
+@docs application, run
 -}
 
 import Signal       exposing (Signal)
