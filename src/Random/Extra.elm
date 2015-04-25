@@ -1,40 +1,4 @@
-module Random.Extra
-  ( constant
-  , emptyList
-  , flattenList
-  , rangeLengthList
-  , bool
-  , andMap
-  , select
-  , selectWithDefault
-  , map
-  , map2
-  , map3
-  , map4
-  , map5
-  , map6
-  , flatMap
-  , flatMap2
-  , flatMap3
-  , flatMap4
-  , flatMap5
-  , flatMap6
-  , zip
-  , zip3
-  , zip4
-  , zip5
-  , zip6
-  , andThen
-  , merge
-  , quickGenerate
-  , cappedGenerateUntil
-  , generateIterativelyUntil
-  , generateIterativelySuchThat
-  , generateUntil
-  , generateSuchThat
-  , generateWithDefault
-  , maybeGenerateSuchThat
-  ) where
+module Random.Extra where
 {-| Module providing extra functionality to the core Random module.
 
 # Constant Generators
@@ -174,9 +138,6 @@ andMap funcGenerator generator =
             (a, seed2) = generate generator seed1
         in
           ((f a), seed2))
-
-
-
 
 
 
