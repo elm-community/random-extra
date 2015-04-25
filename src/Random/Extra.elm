@@ -317,16 +317,10 @@ map6 f generatorA generatorB generatorC generatorD generatorE generatorF =
 
 merge : Generator a -> Generator a -> Generator a
 merge generator1 generator2 =
-  customGenerator
-    (\seed ->
-        let value = quickGenerate bool seed
-        in
-          if value == True
-          then
-            generate generator1 seed
-          else
-            generate generator2 seed)
-
+  frequency
+    [ (1, generator1)
+    , (1, generator2)
+    ] generator1
 
 generateSuchThat : (a -> Bool) -> Generator a -> Seed -> (a, Seed)
 generateSuchThat predicate generator seed =
