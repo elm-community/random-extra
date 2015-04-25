@@ -1,4 +1,13 @@
 module Random.Function where
+{-|
+
+# Generators
+@docs func, func2, func3, func4, func5, func6
+
+# Infix operators
+@docs (<<<), (>>>)
+
+-}
 
 import Random exposing (Generator, generate, customGenerator)
 
