@@ -1,11 +1,14 @@
 module Random.Bool where
 {-|
+
 # Generators
 @docs bool
+
 -}
 
 import Random       exposing (Generator)
 import Random.Extra exposing (frequency, constant)
+
 {-| Random Bool generator
 -}
 bool : Generator Bool
