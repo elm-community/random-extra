@@ -34,5 +34,5 @@ inSet : Set comparable -> Generator comparable -> Generator comparable
 inSet set generator =
   keepIf (flip Set.member set) generator
 
-set : Int -> Generator comparable -> Generator (Set comparable)
-set maxLength generator =
+--set : Int -> Generator comparable -> Generator (Set comparable)
+--set maxLength generator =
