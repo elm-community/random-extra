@@ -8,7 +8,7 @@ module Random.Extra where
 @docs flattenList
 
 # Select
-@docs select, selectWithDefault
+@docs select, selectWithDefault, frequency
 
 # Maps
 @docs map, map2, map3, map4, map5, map6, mapConstraint
@@ -30,10 +30,41 @@ module Random.Extra where
 
 -}
 
-import Random       exposing (Generator, Seed, generate, customGenerator, list, int)
+import Random       exposing (Generator, Seed, generate, customGenerator, list, int, float)
 import Random.Bool  exposing (bool)
 import Utils        exposing (get)
 import List
+
+frequency : List (Float, Generator a) -> Generator a -> Generator a
+frequency pairs defaultGenerator =
+  let
+      frequencies : List Float
+      frequencies = List.map (abs << fst) pairs
+
+      total : Float
+      total = List.sum frequencies
+  in
+      if total == 0
+      then
+        defaultGenerator
+      else
+        customGenerator <|
+          \seed ->
+            let
+                (randIndex, seed1) = generate (float 0 total) seed
+
+                index = floor randIndex
+
+                maybePair = get index pairs
+
+                generator = case maybePair of
+                  Nothing -> defaultGenerator
+                  Just (_ , gen) -> gen
+
+            in
+                generate generator seed
+
+
 
 
 
