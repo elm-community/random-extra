@@ -34,7 +34,6 @@ module Random.Extra where
 -}
 
 import Random       exposing (Generator, Seed, generate, customGenerator, list, int, float)
-import Random.Bool  exposing (bool)
 import Utils        exposing (get)
 import List
 
