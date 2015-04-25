@@ -22,6 +22,9 @@ module Random.Extra where
 # Chaining Generators
 @docs andMap, andThen
 
+# Filtering Generators
+@docs keepIf, dropIf
+
 # Merging Generators
 @docs merge
 
@@ -64,7 +67,10 @@ frequency pairs defaultGenerator =
             in
                 generate generator seed
 
-
+{-| Convert a generator into a generator that only generates values
+that satisfy a given predicate.
+Note that if the predicate is unsatisfiable, the generator will not terminate.
+-}
 keepIf : (a -> Bool) -> Generator a -> Generator a
 keepIf predicate generator =
   let
@@ -81,6 +87,9 @@ keepIf predicate generator =
       customGenerator gen
 
 
+{-| Convert a generator into a generator that only generates values
+that do not satisfy a given predicate.
+-}
 dropIf : (a -> Bool) -> Generator a -> Generator a
 dropIf predicate =
   keepIf (\a -> not (predicate a))
