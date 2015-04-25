@@ -9,6 +9,9 @@ module Random.Signal where
 
 # Generate Signals
 @docs generate, generateEvery
+
+# Generate a run of an application
+@docs application
 -}
 
 import Signal       exposing (Signal)
@@ -67,3 +70,22 @@ generateEvery time generator =
 generate : Generator a -> Signal a
 generate generator =
   generateEvery (1000 / 60)
+
+
+{-| Generate a random run of an application that follows the Elm Architecture.
+Here, the Elm Architecture is interpreted as follows:
+
+    initialModel : model
+    actions : Signal action
+    update : action -> model -> model
+    view : model -> view -- where view is usually Element or Html
+
+    main =
+      Signal.map view
+        (Signal.foldp update initialModel actions)
+
+-}
+application : model -> Generator action -> (action -> model -> model) -> (model -> view) -> Signal view
+application initialModel actionGenerator update view =
+  Signal.map view
+    (Signal.foldp update initialModel (generate actionGenerator))
