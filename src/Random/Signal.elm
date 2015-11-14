@@ -5,7 +5,7 @@ module Random.Signal where
 @docs constant
 
 # Random Seeds
-@docs randomSeed
+@docs randomSeed, randomSeedEvery
 
 # Generate Signals
 @docs generate, generateEvery

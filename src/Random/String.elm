@@ -5,7 +5,7 @@ module Random.String where
 @docs string, word, englishWord, capitalizedEnglishWord
 
 # Random Length String Generators
-@docs rangeLengthString, rangeLengthWord, rangeLengthEnglishWord, anyEnglishWord
+@docs rangeLengthString, rangeLengthWord, rangeLengthEnglishWord, anyEnglishWord, anyCapitalizedEnglishWord, rangeLengthCapitalizedEnglishWord
 
 -}
 
