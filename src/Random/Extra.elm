@@ -180,26 +180,33 @@ fold = reduce
 
 
 
+{-|-}
 zip : Generator a -> Generator b -> Generator (a, b)
 zip = map2 (,)
 
+{-|-}
 zip3 : Generator a -> Generator b -> Generator c -> Generator (a, b, c)
 zip3 = map3 (,,)
 
+{-|-}
 zip4 : Generator a -> Generator b -> Generator c -> Generator d -> Generator (a, b, c, d)
 zip4 = map4 (,,,)
 
+{-|-}
 zip5 : Generator a -> Generator b -> Generator c -> Generator d -> Generator e -> Generator (a, b, c, d, e)
 zip5 = map5 (,,,,)
 
+{-|-}
 zip6 : Generator a -> Generator b -> Generator c -> Generator d -> Generator e -> Generator f -> Generator (a, b, c, d, e, f)
 zip6 = map6 (,,,,,)
 
 
+{-|-}
 andThen : Generator a -> (a -> Generator b) -> Generator b
 andThen generator constructor =
   flatMap constructor generator
 
+{-|-}
 flatMap : (a -> Generator b) -> Generator a -> Generator b
 flatMap constructor generator =
   customGenerator
@@ -209,6 +216,7 @@ flatMap constructor generator =
         in
           generate generatorB seed1)
 
+{-|-}
 flatMap2 : (a -> b -> Generator c) -> Generator a -> Generator b -> Generator c
 flatMap2 constructor generatorA generatorB =
   customGenerator
@@ -219,6 +227,7 @@ flatMap2 constructor generatorA generatorB =
         in
           generate generatorC seed2)
 
+{-|-}
 flatMap3 : (a -> b -> c -> Generator d) -> Generator a -> Generator b -> Generator c -> Generator d
 flatMap3 constructor generatorA generatorB generatorC =
   customGenerator
@@ -230,6 +239,7 @@ flatMap3 constructor generatorA generatorB generatorC =
         in
           generate generatorD seed3)
 
+{-|-}
 flatMap4 : (a -> b -> c -> d -> Generator e) -> Generator a -> Generator b -> Generator c -> Generator d -> Generator e
 flatMap4 constructor generatorA generatorB generatorC generatorD =
   customGenerator
@@ -243,6 +253,7 @@ flatMap4 constructor generatorA generatorB generatorC generatorD =
           generate generatorE seed4)
 
 
+{-|-}
 flatMap5 : (a -> b -> c -> d -> e -> Generator f) -> Generator a -> Generator b -> Generator c -> Generator d -> Generator e -> Generator f
 flatMap5 constructor generatorA generatorB generatorC generatorD generatorE =
   customGenerator
@@ -257,6 +268,7 @@ flatMap5 constructor generatorA generatorB generatorC generatorD generatorE =
           generate generatorF seed5)
 
 
+{-|-}
 flatMap6 : (a -> b -> c -> d -> e -> f -> Generator g) -> Generator a -> Generator b -> Generator c -> Generator d -> Generator e -> Generator f -> Generator g
 flatMap6 constructor generatorA generatorB generatorC generatorD generatorE generatorF =
   customGenerator
@@ -272,7 +284,7 @@ flatMap6 constructor generatorA generatorB generatorC generatorD generatorE gene
           generate generatorG seed6)
 
 
-
+{-|-}
 map : (a -> b) -> Generator a -> Generator b
 map f generator =
   customGenerator
@@ -281,6 +293,7 @@ map f generator =
         in
           (f value, nextSeed))
 
+{-|-}
 map2 : (a -> b -> c) -> Generator a -> Generator b -> Generator c
 map2 f generatorA generatorB =
   customGenerator
@@ -290,6 +303,7 @@ map2 f generatorA generatorB =
         in
           (f valueA valueB, seed2))
 
+{-|-}
 map3 : (a -> b -> c -> d) -> Generator a -> Generator b -> Generator c -> Generator d
 map3 f generatorA generatorB generatorC =
   customGenerator
@@ -300,6 +314,7 @@ map3 f generatorA generatorB generatorC =
         in
           (f valueA valueB valueC, seed3))
 
+{-|-}
 map4 : (a -> b -> c -> d -> e) -> Generator a -> Generator b -> Generator c -> Generator d -> Generator e
 map4 f generatorA generatorB generatorC generatorD =
   customGenerator
@@ -311,6 +326,7 @@ map4 f generatorA generatorB generatorC generatorD =
         in
           (f valueA valueB valueC valueD, seed4))
 
+{-|-}
 map5 : (a -> b -> c -> d -> e -> f) -> Generator a -> Generator b -> Generator c -> Generator d -> Generator e -> Generator f
 map5 f generatorA generatorB generatorC generatorD generatorE =
   customGenerator
@@ -323,6 +339,7 @@ map5 f generatorA generatorB generatorC generatorD generatorE =
         in
           (f valueA valueB valueC valueD valueE, seed5))
 
+{-|-}
 map6 : (a -> b -> c -> d -> e -> f -> g) -> Generator a -> Generator b -> Generator c -> Generator d -> Generator e -> Generator f -> Generator g
 map6 f generatorA generatorB generatorC generatorD generatorE generatorF =
   customGenerator
