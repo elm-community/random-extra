@@ -11,6 +11,9 @@ module Random.Extra where
 @docs select, selectWithDefault, frequency, merge
 
 # Maps
+Because `map` and `mapN` up through N=5 were added to the core Random
+library in Elm 0.16, the versions below are aliases and are kept only
+for compatibility with prior versions of this library.
 @docs map, map2, map3, map4, map5, map6, mapConstraint
 
 # Flat Maps
@@ -163,7 +166,9 @@ zip6 : Generator a -> Generator b -> Generator c -> Generator d -> Generator e -
 zip6 = map6 (,,,,,)
 
 
-{-|-}
+{-| An alias for `Random.andThen` in the standard library. This
+version is kept for compatibility.
+-}
 andThen : Generator a -> (a -> Generator b) -> Generator b
 andThen = Random.andThen
 
