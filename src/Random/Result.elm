@@ -6,7 +6,7 @@ module Random.Result where
 
 -}
 
-import Random       exposing (Generator, customGenerator, generate,float)
+import Random       exposing (Generator, generate,float)
 import Random.Extra exposing (map, frequency)
 
 
