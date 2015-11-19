@@ -102,7 +102,8 @@ flattenList generators =
 -}
 select : List a -> Generator (Maybe a)
 select list =
-  int 0 (List.length list - 1) `Random.andThen` (\index -> get index list |> constant)
+  Random.map (\index -> get index list)
+             (int 0 (List.length list - 1))
 
 
 {-| Generator that randomly selects an element from a list with a default value
@@ -358,6 +359,5 @@ the constraint and the result of applying the constaint.
 -}
 mapConstraint : (a -> b) -> Generator a -> Generator (a, b)
 mapConstraint constraint generator =
-  generator `Random.andThen` (\a ->
-    Random.pair (constant a) (constant (constraint a)))
+  Random.map (\a -> (a, constraint a)) generator
 
