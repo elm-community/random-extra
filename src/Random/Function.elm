@@ -9,17 +9,14 @@ module Random.Function where
 
 -}
 
-import Random exposing (Generator, generate, customGenerator)
+import Random exposing (Generator, generate)
+import Random.Extra exposing (flatMap2)
 
 {-| Generates a random function of one argument given a generator for the output.
 -}
 func : Generator b -> Generator (a -> b)
 func generatorB =
-  customGenerator <|
-    (\seed ->
-        let (valueB, seed1) = generate generatorB seed
-        in
-          ((\a -> valueB), seed1))
+  Random.map (\b a -> b) generatorB
 
 
 {-| Generates a random function of two arguments given a generator for the output.
@@ -62,12 +59,7 @@ infixl 9 >>>
 -}
 (>>>) : Generator (a -> b) -> Generator (b -> c) -> Generator (a -> c)
 (>>>) generatorAB generatorBC =
-  customGenerator <|
-    (\seed ->
-        let (f, seed1) = generate generatorAB seed
-            (g, seed2) = generate generatorBC seed1
-        in
-          (f >> g, seed2))
+  Random.map2 (\f g -> f >> g) generatorAB generatorBC
 
 
 infixr 9 <<<
@@ -75,9 +67,5 @@ infixr 9 <<<
 -}
 (<<<) : Generator (b -> c) -> Generator (a -> b) -> Generator (a -> c)
 (<<<) generatorBC generatorAB =
-  customGenerator <|
-    (\seed ->
-        let (f, seed1) = generate generatorAB seed
-            (g, seed2) = generate generatorBC seed1
-        in
-          (f >> g, seed2))
+  Random.map2 (\f g -> f >> g) generatorAB generatorBC
+

@@ -55,7 +55,7 @@ generateEvery time generator =
         }
 
       update seed model =
-        { model | seed <- seed }
+        { model | seed = seed }
 
       view model =
         fst <| Random.generate model.generator model.seed
