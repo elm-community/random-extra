@@ -95,7 +95,7 @@ flattenList : List (Generator a) -> Generator (List a)
 flattenList generators =
   case generators of
       [] -> constant []
-      g :: gs -> flatMap2 (\a b -> a::b |> constant) g (flattenList gs)
+      g :: gs -> map2 (::) g (flattenList gs)
 
 
 {-| Generator that randomly selects an element from a list.
