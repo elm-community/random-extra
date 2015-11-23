@@ -117,9 +117,8 @@ selectWithDefault defaultValue list =
 {-| Create a generator that always returns the same value.
 -}
 constant : a -> Generator a
-constant =
-  let dummy = int 1 2 -- create only once, not once per call
-  in \value -> Random.map (\_ -> value) dummy
+constant value =
+  Random.map (\_ -> value) Random.bool
 
 
 {-| Apply a generator of functions to a generator of values.
