@@ -17,8 +17,8 @@ module Random.Task where
 
 import Task         exposing (Task, ThreadID, succeed, fail, sleep)
 import Task.Extra   as Task
-import Random       exposing (Generator, float)
-import Random.Extra exposing (map, constant, flatMap)
+import Random       exposing (Generator, map, float)
+import Random.Extra exposing (constant, flatMap)
 import Time         exposing (Time)
 import Signal       exposing (Address)
 

@@ -10,9 +10,9 @@ module Random.String where
 -}
 
 import String exposing (fromList)
-import Random exposing (Generator, list, int)
+import Random exposing (Generator, map, map2, list, int)
 import Random.Char exposing (upperCaseLatin, lowerCaseLatin, unicode)
-import Random.Extra exposing (map, map2, flatMap)
+import Random.Extra exposing (flatMap)
 
 
 

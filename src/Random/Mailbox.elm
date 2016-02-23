@@ -6,8 +6,7 @@ module Random.Mailbox where
 -}
 
 import Signal       exposing (Mailbox, Address)
-import Random       exposing (Generator)
-import Random.Extra exposing (map)
+import Random       exposing (Generator, map)
 
 
 {-| Generates a random mailbox

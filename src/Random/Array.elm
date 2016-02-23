@@ -10,8 +10,8 @@ module Random.Array where
 -}
 
 import Array        exposing (Array, fromList, empty)
-import Random       exposing (Generator, list, int)
-import Random.Extra exposing (map, flatMap, constant)
+import Random       exposing (Generator, map, list, int)
+import Random.Extra exposing (flatMap, constant)
 
 {-| Generate a random array of given size given a random generator
 
