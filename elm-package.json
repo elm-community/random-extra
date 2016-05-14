@@ -8,7 +8,6 @@
     ],
     "exposed-modules": [
         "Random.Array",
-        "Random.Bool",
         "Random.Char",
         "Random.Color",
         "Random.Date",
