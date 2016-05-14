@@ -13,7 +13,7 @@ module Random.Extra exposing (..)
 
 # Maps
 For `map` and `mapN` up through N=5, use the core library.
-@docs map6, mapConstraint
+@docs map6, andMap, mapConstraint
 
 # Flat Maps
 @docs flatMap, flatMap2, flatMap3, flatMap4, flatMap5, flatMap6
@@ -23,9 +23,6 @@ For `map` and `mapN` up through N=5, use the core library.
 
 # Reducers
 @docs reduce, fold
-
-# Chaining Generators
-@docs andMap
 
 # Filtering Generators
 @docs keepIf, dropIf

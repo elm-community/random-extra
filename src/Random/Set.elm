@@ -29,23 +29,23 @@ singleton generator =
   map Set.singleton generator
 
 
-{-| A generator that creates values not present in a given set.
+{-| Filter a generator of all values not in a given set.
 -}
 notInSet : Set comparable -> Generator comparable -> Generator comparable
 notInSet set generator =
   dropIf (flip Set.member set) generator
 
 
-{-| Generate values from a set.
-Analogous to `Random.Extra.select` but with sets
+{-| Select a value from a set uniformly at random, or `Nothing` for an empty set.
+Analogous to `Random.Extra.select` but with sets.
 -}
 select : Set comparable -> Generator (Maybe comparable)
 select set =
   Random.Extra.select (Set.toList set)
 
 
-{-| Generate values from a set or a default value.
-Analogous to `Random.Extra.selectWithDefault` but with sets
+{-| Select a value from a set uniformly at random, with a default.
+Analogous to `Random.Extra.selectWithDefault` but with sets.
 -}
 selectWithDefault : comparable -> Set comparable -> Generator comparable
 selectWithDefault default set =
@@ -55,8 +55,8 @@ selectWithDefault default set =
 {-| Generate a set of at most the given size from a generator.
 
 The size of a generated set is limited both by the integer provided and the
-number of unique values the generator can generate. It is very likely, but not
-guaranteed, that generated sets will be as big as the smaller of the two limits.
+number of unique values the generator can produce. It is very likely, but not
+guaranteed, that generated sets will be as big as the smaller of these two limits.
 -}
 set : Int -> Generator comparable -> Generator (Set comparable)
 set maxLength generator =

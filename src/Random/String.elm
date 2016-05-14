@@ -33,21 +33,6 @@ rangeLengthString minLength maxLength charGenerator =
   flatMap (\len -> string len charGenerator) (int minLength maxLength)
 
 
-{-| Generate a random word of a given length with a given character generator
-(alias for `string`)
--}
-word : Int -> Generator Char -> Generator String
-word =
-  string
-
-
-{-| Alias for `rangeLengthString`
--}
-rangeLengthWord : Int -> Int -> Generator Char -> Generator String
-rangeLengthWord =
-  rangeLengthString
-
-
 {-| Generate a random lowercase word with english characters of a given length.
 Note: This just generates a random string using the letters in english, so there
 are no guarantees that the result be an actual english word.
