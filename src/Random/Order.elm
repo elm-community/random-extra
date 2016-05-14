@@ -1,4 +1,5 @@
-module Random.Order where
+module Random.Order exposing (..)
+
 {-| List of Order Generators
 
 # Generators
@@ -8,11 +9,13 @@ module Random.Order where
 import Random exposing (Generator)
 import Random.Extra exposing (selectWithDefault)
 
+
 {-| Generate a random order with equal probability.
 -}
 order : Generator Order
 order =
-  selectWithDefault EQ
+  selectWithDefault
+    EQ
     [ LT
     , EQ
     , GT

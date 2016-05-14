@@ -1,4 +1,5 @@
-module Random.Dict where
+module Random.Dict exposing (..)
+
 {-| List of Dict Generators
 
 # Generators
@@ -6,9 +7,10 @@ module Random.Dict where
 
 -}
 
-import Dict         exposing (Dict, fromList, empty)
-import Random       exposing (Generator, map, list, int)
+import Dict exposing (Dict, fromList, empty)
+import Random exposing (Generator, map, list, int)
 import Random.Extra exposing (zip, flatMap, constant)
+
 
 {-| Generate a random dict with given length, key generator, and value generator
 
@@ -18,11 +20,13 @@ dict : Int -> Generator comparable -> Generator value -> Generator (Dict compara
 dict dictLength keyGenerator valueGenerator =
   map (fromList) (list dictLength (zip keyGenerator valueGenerator))
 
+
 {-| Generator that always generates the empty dict
 -}
 emptyDict : Generator (Dict comparable value)
 emptyDict =
   constant empty
+
 
 {-| Generate a random dict of random length given a minimum length and
 a maximum length.
