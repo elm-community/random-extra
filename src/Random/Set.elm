@@ -10,8 +10,8 @@ module Random.Set where
 -}
 
 import Set          exposing (Set)
-import Random       exposing (Generator, andThen)
-import Random.Extra exposing (constant, map, dropIf, keepIf)
+import Random       exposing (Generator, map, andThen)
+import Random.Extra exposing (constant, dropIf, keepIf)
 
 
 {-| Generator that always returns the empty set

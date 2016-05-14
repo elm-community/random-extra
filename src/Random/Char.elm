@@ -10,8 +10,8 @@ module Random.Char where
 -}
 
 import Char         exposing (fromCode)
-import Random       exposing (Generator, int)
-import Random.Extra exposing (map, merge)
+import Random       exposing (Generator, map, int)
+import Random.Extra exposing (merge)
 
 {-| Generate a random character within a certain keyCode range
 

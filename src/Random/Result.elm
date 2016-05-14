@@ -6,8 +6,8 @@ module Random.Result where
 
 -}
 
-import Random       exposing (Generator, generate,float)
-import Random.Extra exposing (map, frequency)
+import Random       exposing (Generator, generate, map, float)
+import Random.Extra exposing (frequency)
 
 
 {-| Generate an ok result from a random generator of values
