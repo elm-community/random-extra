@@ -1,4 +1,5 @@
-module Random.Set where
+module Random.Set exposing (..)
+
 {-| List of Random Set Generators
 
 # Generators
@@ -9,8 +10,8 @@ module Random.Set where
 
 -}
 
-import Set          exposing (Set)
-import Random       exposing (Generator, map, andThen)
+import Set exposing (Set)
+import Random exposing (Generator, map, andThen)
 import Random.Extra exposing (constant, dropIf, keepIf)
 
 
@@ -35,7 +36,6 @@ notInSet set generator =
   dropIf (flip Set.member set) generator
 
 
-
 {-| Generate values from a set.
 Analogous to `Random.Extra.select` but with sets
 -}
@@ -43,12 +43,14 @@ select : Set comparable -> Generator (Maybe comparable)
 select set =
   Random.Extra.select (Set.toList set)
 
+
 {-| Generate values from a set or a default value.
 Analogous to `Random.Extra.selectWithDefault` but with sets
 -}
 selectWithDefault : comparable -> Set comparable -> Generator comparable
 selectWithDefault default set =
   Random.Extra.selectWithDefault default (Set.toList set)
+
 
 {-| Generate a set of at most the given size from a generator.
 
@@ -63,11 +65,15 @@ set maxLength generator =
       if remaining <= 0 || strikes == 10 then
         constant set
       else
-        generator `andThen` \val ->
-          let newSet = Set.insert val set
-          in if Set.size newSet == Set.size set then
-            helper set remaining (strikes+1)
-          else
-            helper newSet (remaining-1) 0
+        generator
+          `andThen` \val ->
+                      let
+                        newSet =
+                          Set.insert val set
+                      in
+                        if Set.size newSet == Set.size set then
+                          helper set remaining (strikes + 1)
+                        else
+                          helper newSet (remaining - 1) 0
   in
     helper Set.empty maxLength 0

@@ -1,4 +1,5 @@
-module Random.Bool where
+module Random.Bool exposing (..)
+
 {-| List of Bool Generators
 
 # Generators
@@ -6,14 +7,16 @@ module Random.Bool where
 
 -}
 
-import Random       exposing (Generator)
+import Random exposing (Generator)
 import Random.Extra exposing (frequency, constant)
+
 
 {-| Random Bool generator
 -}
 bool : Generator Bool
 bool =
   frequency
-    [ (1, constant True)
-    , (1, constant False)
-    ] (constant True)
+    [ ( 1, constant True )
+    , ( 1, constant False )
+    ]
+    (constant True)

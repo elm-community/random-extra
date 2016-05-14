@@ -1,4 +1,5 @@
-module Random.Function where
+module Random.Function exposing (..)
+
 {-| List of Function Generators
 
 # Generators
@@ -11,6 +12,7 @@ module Random.Function where
 
 import Random exposing (Generator, generate)
 import Random.Extra exposing (flatMap2)
+
 
 {-| Generates a random function of one argument given a generator for the output.
 -}
@@ -55,6 +57,8 @@ func6 generatorG =
 
 
 infixl 9 >>>
+
+
 {-| Compose two function generators. Analogous to `>>`
 -}
 (>>>) : Generator (a -> b) -> Generator (b -> c) -> Generator (a -> c)
@@ -63,9 +67,10 @@ infixl 9 >>>
 
 
 infixr 9 <<<
+
+
 {-| Compose two function generators. Analogous to `<<`
 -}
 (<<<) : Generator (b -> c) -> Generator (a -> b) -> Generator (a -> c)
 (<<<) generatorBC generatorAB =
   Random.map2 (\f g -> f >> g) generatorAB generatorBC
-

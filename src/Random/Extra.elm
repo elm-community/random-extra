@@ -1,4 +1,5 @@
-module Random.Extra where
+module Random.Extra exposing (..)
+
 {-| Module providing extra functionality to the core Random module.
 
 # Constant Generators
@@ -34,10 +35,11 @@ For `map` and `mapN` up through N=5, use the core library.
 
 -}
 
-import Random       exposing (Generator, Seed, generate, list, int, float, initialSeed)
-import Utils        exposing (get)
+import Random exposing (Generator, Seed, step, list, int, float, initialSeed)
+import Utils exposing (get)
 import List
 import Maybe
+
 
 {-| Create a generator that chooses a generator from a tuple of generators
 based on the provided likelihood. The likelihood of a given generator being
@@ -46,26 +48,40 @@ generator must be provided in the case that the list is empty or that the
 sum of the likelihoods is 0. Note that the absolute values of the likelihoods
 is always taken.
 -}
-frequency : List (Float, Generator a) -> Generator a -> Generator a
+frequency : List ( Float, Generator a ) -> Generator a -> Generator a
 frequency pairs defaultGenerator =
   let
-      frequencies : List Float
-      frequencies = List.map (abs << fst) pairs
+    frequencies : List Float
+    frequencies =
+      List.map (abs << fst) pairs
 
-      total : Float
-      total = List.sum frequencies * (toFloat <| List.length frequencies)
+    total : Float
+    total =
+      List.sum frequencies * (toFloat <| List.length frequencies)
   in
-      if total == 0
-      then
-        defaultGenerator
-      else
-        float 0 total `Random.andThen` (\randIndex ->
-          let index = floor randIndex
-              maybePair = get index pairs
-              generator = case maybePair of
-                Nothing -> defaultGenerator
-                Just (_ , gen) -> gen
-          in generator)
+    if total == 0 then
+      defaultGenerator
+    else
+      float 0 total
+        `Random.andThen` (\randIndex ->
+                            let
+                              index =
+                                floor randIndex
+
+                              maybePair =
+                                get index pairs
+
+                              generator =
+                                case maybePair of
+                                  Nothing ->
+                                    defaultGenerator
+
+                                  Just ( _, gen ) ->
+                                    gen
+                            in
+                              generator
+                         )
+
 
 {-| Convert a generator into a generator that only generates values
 that satisfy a given predicate.
@@ -73,10 +89,13 @@ Note that if the predicate is unsatisfiable, the generator will not terminate.
 -}
 keepIf : (a -> Bool) -> Generator a -> Generator a
 keepIf predicate generator =
-  generator `Random.andThen` (\a ->
-    if predicate a
-    then constant a
-    else keepIf predicate generator)
+  generator
+    `Random.andThen` (\a ->
+                        if predicate a then
+                          constant a
+                        else
+                          keepIf predicate generator
+                     )
 
 
 {-| Convert a generator into a generator that only generates values
@@ -92,16 +111,20 @@ dropIf predicate =
 flattenList : List (Generator a) -> Generator (List a)
 flattenList generators =
   case generators of
-      [] -> constant []
-      g :: gs -> Random.map2 (::) g (flattenList gs)
+    [] ->
+      constant []
+
+    g :: gs ->
+      Random.map2 (::) g (flattenList gs)
 
 
 {-| Generator that randomly selects an element from a list.
 -}
 select : List a -> Generator (Maybe a)
 select list =
-  Random.map (\index -> get index list)
-             (int 0 (List.length list - 1))
+  Random.map
+    (\index -> get index list)
+    (int 0 (List.length list - 1))
 
 
 {-| Generator that randomly selects an element from a list with a default value
@@ -139,87 +162,137 @@ reduce reducer initial generator =
 {-| Alias for reduce.
 -}
 fold : (a -> b -> b) -> b -> Generator a -> Generator b
-fold = reduce
+fold =
+  reduce
 
 
-
-{-|-}
-zip : Generator a -> Generator b -> Generator (a, b)
-zip = Random.map2 (,)
-
-{-|-}
-zip3 : Generator a -> Generator b -> Generator c -> Generator (a, b, c)
-zip3 = Random.map3 (,,)
-
-{-|-}
-zip4 : Generator a -> Generator b -> Generator c -> Generator d -> Generator (a, b, c, d)
-zip4 = Random.map4 (,,,)
-
-{-|-}
-zip5 : Generator a -> Generator b -> Generator c -> Generator d -> Generator e -> Generator (a, b, c, d, e)
-zip5 = Random.map5 (,,,,)
-
-{-|-}
-zip6 : Generator a -> Generator b -> Generator c -> Generator d -> Generator e -> Generator f -> Generator (a, b, c, d, e, f)
-zip6 = map6 (,,,,,)
+{-| -}
+zip : Generator a -> Generator b -> Generator ( a, b )
+zip =
+  Random.map2 (,)
 
 
-{-|-}
+{-| -}
+zip3 : Generator a -> Generator b -> Generator c -> Generator ( a, b, c )
+zip3 =
+  Random.map3 (,,)
+
+
+{-| -}
+zip4 : Generator a -> Generator b -> Generator c -> Generator d -> Generator ( a, b, c, d )
+zip4 =
+  Random.map4 (,,,)
+
+
+{-| -}
+zip5 : Generator a -> Generator b -> Generator c -> Generator d -> Generator e -> Generator ( a, b, c, d, e )
+zip5 =
+  Random.map5 (,,,,)
+
+
+{-| -}
+zip6 : Generator a -> Generator b -> Generator c -> Generator d -> Generator e -> Generator f -> Generator ( a, b, c, d, e, f )
+zip6 =
+  map6 (,,,,,)
+
+
+{-| -}
 flatMap : (a -> Generator b) -> Generator a -> Generator b
-flatMap = flip Random.andThen
+flatMap =
+  flip Random.andThen
 
 
-{-|-}
+{-| -}
 flatMap2 : (a -> b -> Generator c) -> Generator a -> Generator b -> Generator c
 flatMap2 constructor generatorA generatorB =
-  generatorA `Random.andThen` (\a ->
-    generatorB `Random.andThen` (\b ->
-      constructor a b))
+  generatorA
+    `Random.andThen` (\a ->
+                        generatorB
+                          `Random.andThen` (\b ->
+                                              constructor a b
+                                           )
+                     )
 
 
-{-|-}
+{-| -}
 flatMap3 : (a -> b -> c -> Generator d) -> Generator a -> Generator b -> Generator c -> Generator d
 flatMap3 constructor generatorA generatorB generatorC =
-  generatorA `Random.andThen` (\a ->
-    generatorB `Random.andThen` (\b ->
-      generatorC `Random.andThen` (\c ->
-        constructor a b c)))
+  generatorA
+    `Random.andThen` (\a ->
+                        generatorB
+                          `Random.andThen` (\b ->
+                                              generatorC
+                                                `Random.andThen` (\c ->
+                                                                    constructor a b c
+                                                                 )
+                                           )
+                     )
 
 
-{-|-}
+{-| -}
 flatMap4 : (a -> b -> c -> d -> Generator e) -> Generator a -> Generator b -> Generator c -> Generator d -> Generator e
 flatMap4 constructor generatorA generatorB generatorC generatorD =
-  generatorA `Random.andThen` (\a ->
-    generatorB `Random.andThen` (\b ->
-      generatorC `Random.andThen` (\c ->
-        generatorD `Random.andThen` (\d ->
-          constructor a b c d))))
+  generatorA
+    `Random.andThen` (\a ->
+                        generatorB
+                          `Random.andThen` (\b ->
+                                              generatorC
+                                                `Random.andThen` (\c ->
+                                                                    generatorD
+                                                                      `Random.andThen` (\d ->
+                                                                                          constructor a b c d
+                                                                                       )
+                                                                 )
+                                           )
+                     )
 
 
-{-|-}
+{-| -}
 flatMap5 : (a -> b -> c -> d -> e -> Generator f) -> Generator a -> Generator b -> Generator c -> Generator d -> Generator e -> Generator f
 flatMap5 constructor generatorA generatorB generatorC generatorD generatorE =
-  generatorA `Random.andThen` (\a ->
-    generatorB `Random.andThen` (\b ->
-      generatorC `Random.andThen` (\c ->
-        generatorD `Random.andThen` (\d ->
-          generatorE `Random.andThen` (\e ->
-            constructor a b c d e)))))
+  generatorA
+    `Random.andThen` (\a ->
+                        generatorB
+                          `Random.andThen` (\b ->
+                                              generatorC
+                                                `Random.andThen` (\c ->
+                                                                    generatorD
+                                                                      `Random.andThen` (\d ->
+                                                                                          generatorE
+                                                                                            `Random.andThen` (\e ->
+                                                                                                                constructor a b c d e
+                                                                                                             )
+                                                                                       )
+                                                                 )
+                                           )
+                     )
 
 
-{-|-}
+{-| -}
 flatMap6 : (a -> b -> c -> d -> e -> f -> Generator g) -> Generator a -> Generator b -> Generator c -> Generator d -> Generator e -> Generator f -> Generator g
 flatMap6 constructor generatorA generatorB generatorC generatorD generatorE generatorF =
-  generatorA `Random.andThen` (\a ->
-    generatorB `Random.andThen` (\b ->
-      generatorC `Random.andThen` (\c ->
-        generatorD `Random.andThen` (\d ->
-          generatorE `Random.andThen` (\e ->
-            generatorF `Random.andThen` (\f ->
-              constructor a b c d e f))))))
+  generatorA
+    `Random.andThen` (\a ->
+                        generatorB
+                          `Random.andThen` (\b ->
+                                              generatorC
+                                                `Random.andThen` (\c ->
+                                                                    generatorD
+                                                                      `Random.andThen` (\d ->
+                                                                                          generatorE
+                                                                                            `Random.andThen` (\e ->
+                                                                                                                generatorF
+                                                                                                                  `Random.andThen` (\f ->
+                                                                                                                                      constructor a b c d e f
+                                                                                                                                   )
+                                                                                                             )
+                                                                                       )
+                                                                 )
+                                           )
+                     )
 
 
-{-|-}
+{-| -}
 map6 : (a -> b -> c -> d -> e -> f -> g) -> Generator a -> Generator b -> Generator c -> Generator d -> Generator e -> Generator f -> Generator g
 map6 f generatorA generatorB generatorC generatorD generatorE generatorF =
   Random.map5 f generatorA generatorB generatorC generatorD generatorE `andMap` generatorF
@@ -231,29 +304,31 @@ Useful for merging two generators that cover different areas of the same type.
 merge : Generator a -> Generator a -> Generator a
 merge generator1 generator2 =
   frequency
-    [ (1, generator1)
-    , (1, generator2)
-    ] generator1
+    [ ( 1, generator1 )
+    , ( 1, generator2 )
+    ]
+    generator1
 
 
 {-| Generate n values from a generator.
 -}
 generateN : Int -> Generator a -> Seed -> List a
 generateN n generator seed =
-  if n <= 0
-  then
+  if n <= 0 then
     []
   else
-    let (value, nextSeed) = generate generator seed
+    let
+      ( value, nextSeed ) =
+        step generator seed
     in
-        value :: generateN (n - 1) generator nextSeed
+      value :: generateN (n - 1) generator nextSeed
 
 
 {-| Generate a value from a generator that satisfies a given predicate
 -}
-generateSuchThat : (a -> Bool) -> Generator a -> Seed -> (a, Seed)
+generateSuchThat : (a -> Bool) -> Generator a -> Seed -> ( a, Seed )
 generateSuchThat predicate generator seed =
-  generate (keepIf predicate generator) seed
+  step (keepIf predicate generator) seed
 
 
 {-| Generate a list of values from a generator until the given predicate
@@ -261,10 +336,11 @@ is satisfied
 -}
 generateUntil : (a -> Bool) -> Generator a -> Seed -> List a
 generateUntil predicate generator seed =
-  let (value, nextSeed) = generate generator seed
+  let
+    ( value, nextSeed ) =
+      step generator seed
   in
-    if predicate value
-    then
+    if predicate value then
       value :: generateUntil predicate generator nextSeed
     else
       []
@@ -289,17 +365,15 @@ the predicate is satisfied.
 -}
 generateIterativelyUntil : Int -> (a -> Bool) -> (Int -> Generator a) -> Seed -> List a
 generateIterativelyUntil maxLength predicate constructor seed =
-  let iterate index =
-        if index >= maxLength
-        then
-          []
-        else
-          (generateUntil predicate (constructor index) seed) ++
-          (iterate (index + 1))
-
+  let
+    iterate index =
+      if index >= maxLength then
+        []
+      else
+        (generateUntil predicate (constructor index) seed)
+          ++ (iterate (index + 1))
   in
     iterate 0
-
 
 
 {-| Generate iteratively a list of values from a generator until either
@@ -309,30 +383,29 @@ the given maxlength is reached or the predicate is satisfied.
 -}
 cappedGenerateUntil : Int -> (a -> Bool) -> Generator a -> Seed -> List a
 cappedGenerateUntil maxGenerations predicate generator seed =
-  if maxGenerations <= 0
-  then
+  if maxGenerations <= 0 then
     []
   else
-    let (value, nextSeed) = generate generator seed
+    let
+      ( value, nextSeed ) =
+        step generator seed
     in
-      if predicate value
-      then
+      if predicate value then
         value :: cappedGenerateUntil (maxGenerations - 1) predicate generator nextSeed
       else
         []
-
 
 
 {-| Quickly generate a value from a generator disregarding seeds.
 -}
 quickGenerate : Generator a -> a
 quickGenerate generator =
-  (fst (generate generator (initialSeed 1)))
+  (fst (step generator (initialSeed 1)))
+
 
 {-| Apply a constraint onto a generator and returns both the input to
 the constraint and the result of applying the constaint.
 -}
-mapConstraint : (a -> b) -> Generator a -> Generator (a, b)
+mapConstraint : (a -> b) -> Generator a -> Generator ( a, b )
 mapConstraint constraint generator =
-  Random.map (\a -> (a, constraint a)) generator
-
+  Random.map (\a -> ( a, constraint a )) generator
