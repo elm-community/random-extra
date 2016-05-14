@@ -3,10 +3,10 @@ module Random.String exposing (..)
 {-| List of String Generators
 
 # Simple Generators
-@docs string, word, englishWord, capitalizedEnglishWord
+@docs string, englishWord, capitalizedEnglishWord
 
 # Random Length String Generators
-@docs rangeLengthString, rangeLengthWord, rangeLengthEnglishWord, anyEnglishWord, anyCapitalizedEnglishWord, rangeLengthCapitalizedEnglishWord
+@docs rangeLengthString, rangeLengthEnglishWord, anyEnglishWord, anyCapitalizedEnglishWord, rangeLengthCapitalizedEnglishWord
 
 -}
 
@@ -47,7 +47,7 @@ given a minimum length and maximum length.
 -}
 rangeLengthEnglishWord : Int -> Int -> Generator String
 rangeLengthEnglishWord minLength maxLength =
-  rangeLengthWord minLength maxLength lowerCaseLatin
+  rangeLengthString minLength maxLength lowerCaseLatin
 
 
 {-| Generate a random lowercase word with english characters of random length

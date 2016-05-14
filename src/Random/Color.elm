@@ -3,7 +3,7 @@ module Random.Color exposing (..)
 {-| List of Color Generators
 
 # Generators
-@docs color, rgb, rgba, hsl, hsla, greyscale, grayscale, red, green, blue
+@docs rgb, rgba, hsl, hsla, greyscale, grayscale, red, green, blue
 
 -}
 
