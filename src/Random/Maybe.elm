@@ -6,8 +6,8 @@ module Random.Maybe where
 
 -}
 
-import Random       exposing (Generator)
-import Random.Extra exposing (constant, map, frequency, flatMap)
+import Random       exposing (Generator, map)
+import Random.Extra exposing (constant, frequency, flatMap)
 import Maybe
 
 {-| Generate a Maybe from a generator. Will generate Nothings 50% of the time.

@@ -11,10 +11,8 @@ module Random.Extra where
 @docs select, selectWithDefault, frequency, merge
 
 # Maps
-Because `map` and `mapN` up through N=5 were added to the core Random
-library in Elm 0.16, the versions below are aliases and are kept only
-for compatibility with prior versions of this library.
-@docs map, map2, map3, map4, map5, map6, mapConstraint
+For `map` and `mapN` up through N=5, use the core library.
+@docs map6, mapConstraint
 
 # Flat Maps
 @docs flatMap, flatMap2, flatMap3, flatMap4, flatMap5, flatMap6
@@ -26,7 +24,7 @@ for compatibility with prior versions of this library.
 @docs reduce, fold
 
 # Chaining Generators
-@docs andMap, andThen
+@docs andMap
 
 # Filtering Generators
 @docs keepIf, dropIf
@@ -95,7 +93,7 @@ flattenList : List (Generator a) -> Generator (List a)
 flattenList generators =
   case generators of
       [] -> constant []
-      g :: gs -> map2 (::) g (flattenList gs)
+      g :: gs -> Random.map2 (::) g (flattenList gs)
 
 
 {-| Generator that randomly selects an element from a list.
@@ -111,7 +109,7 @@ select list =
 -}
 selectWithDefault : a -> List a -> Generator a
 selectWithDefault defaultValue list =
-  map (Maybe.withDefault defaultValue) (select list)
+  Random.map (Maybe.withDefault defaultValue) (select list)
 
 
 {-| Create a generator that always returns the same value.
@@ -147,34 +145,29 @@ fold = reduce
 
 {-|-}
 zip : Generator a -> Generator b -> Generator (a, b)
-zip = map2 (,)
+zip = Random.map2 (,)
 
 {-|-}
 zip3 : Generator a -> Generator b -> Generator c -> Generator (a, b, c)
-zip3 = map3 (,,)
+zip3 = Random.map3 (,,)
 
 {-|-}
 zip4 : Generator a -> Generator b -> Generator c -> Generator d -> Generator (a, b, c, d)
-zip4 = map4 (,,,)
+zip4 = Random.map4 (,,,)
 
 {-|-}
 zip5 : Generator a -> Generator b -> Generator c -> Generator d -> Generator e -> Generator (a, b, c, d, e)
-zip5 = map5 (,,,,)
+zip5 = Random.map5 (,,,,)
 
 {-|-}
 zip6 : Generator a -> Generator b -> Generator c -> Generator d -> Generator e -> Generator f -> Generator (a, b, c, d, e, f)
 zip6 = map6 (,,,,,)
 
 
-{-| An alias for `Random.andThen` in the standard library. This
-version is kept for compatibility.
--}
-andThen : Generator a -> (a -> Generator b) -> Generator b
-andThen = Random.andThen
-
 {-|-}
 flatMap : (a -> Generator b) -> Generator a -> Generator b
 flatMap = flip Random.andThen
+
 
 {-|-}
 flatMap2 : (a -> b -> Generator c) -> Generator a -> Generator b -> Generator c
@@ -191,6 +184,7 @@ flatMap3 constructor generatorA generatorB generatorC =
     generatorB `Random.andThen` (\b ->
       generatorC `Random.andThen` (\c ->
         constructor a b c)))
+
 
 {-|-}
 flatMap4 : (a -> b -> c -> d -> Generator e) -> Generator a -> Generator b -> Generator c -> Generator d -> Generator e
@@ -212,6 +206,7 @@ flatMap5 constructor generatorA generatorB generatorC generatorD generatorE =
           generatorE `Random.andThen` (\e ->
             constructor a b c d e)))))
 
+
 {-|-}
 flatMap6 : (a -> b -> c -> d -> e -> f -> Generator g) -> Generator a -> Generator b -> Generator c -> Generator d -> Generator e -> Generator f -> Generator g
 flatMap6 constructor generatorA generatorB generatorC generatorD generatorE generatorF =
@@ -225,29 +220,10 @@ flatMap6 constructor generatorA generatorB generatorC generatorD generatorE gene
 
 
 {-|-}
-map : (a -> b) -> Generator a -> Generator b
-map = Random.map
-
-{-|-}
-map2 : (a -> b -> c) -> Generator a -> Generator b -> Generator c
-map2 = Random.map2
-
-{-|-}
-map3 : (a -> b -> c -> d) -> Generator a -> Generator b -> Generator c -> Generator d
-map3 = Random.map3
-
-{-|-}
-map4 : (a -> b -> c -> d -> e) -> Generator a -> Generator b -> Generator c -> Generator d -> Generator e
-map4 = Random.map4
-
-{-|-}
-map5 : (a -> b -> c -> d -> e -> f) -> Generator a -> Generator b -> Generator c -> Generator d -> Generator e -> Generator f
-map5 = Random.map5
-
-{-|-}
 map6 : (a -> b -> c -> d -> e -> f -> g) -> Generator a -> Generator b -> Generator c -> Generator d -> Generator e -> Generator f -> Generator g
 map6 f generatorA generatorB generatorC generatorD generatorE generatorF =
   Random.map5 f generatorA generatorB generatorC generatorD generatorE `andMap` generatorF
+
 
 {-| Choose between two generators with a 50-50 chance.
 Useful for merging two generators that cover different areas of the same type.

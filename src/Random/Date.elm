@@ -8,8 +8,8 @@ module Random.Date where
 
 import Date         exposing (Day(..), Month(..), fromTime, toTime, Date)
 import Time         exposing (Time)
-import Random       exposing (Generator, int, float)
-import Random.Extra exposing (map, selectWithDefault)
+import Random       exposing (Generator, map, int, float)
+import Random.Extra exposing (selectWithDefault)
 
 {-| Generate a random day of the week.
 -}

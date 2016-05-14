@@ -15,8 +15,8 @@ module Random.Signal where
 -}
 
 import Signal       exposing (Signal)
-import Random       exposing (Generator, Seed)
-import Random.Extra exposing (map, reduce)
+import Random       exposing (Generator, Seed, map)
+import Random.Extra exposing (reduce)
 import Time         exposing (Time)
 
 {-| Generates constant signals.

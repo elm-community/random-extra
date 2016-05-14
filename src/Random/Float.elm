@@ -9,8 +9,7 @@ module Random.Float where
 
 -}
 
-import Random       exposing (Generator, float, maxInt, minInt, generate)
-import Random.Extra exposing (map)
+import Random       exposing (Generator, map, float, maxInt, minInt, generate)
 
 
 {-| Generator that generates any float

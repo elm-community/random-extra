@@ -7,8 +7,8 @@ module Random.Touch where
 -}
 
 import Touch        exposing (Touch)
-import Random       exposing (Generator, int)
-import Random.Extra exposing (map2, map6)
+import Random       exposing (Generator, map2, int)
+import Random.Extra exposing (map6)
 import Random.Int   exposing (anyInt)
 import Random.Float exposing (positiveFloat)
 

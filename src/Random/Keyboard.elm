@@ -8,8 +8,8 @@ module Random.Keyboard where
 
 import List
 import Char         exposing (KeyCode)
-import Random       exposing (Generator, int)
-import Random.Extra exposing (map, selectWithDefault)
+import Random       exposing (Generator, map, int)
+import Random.Extra exposing (selectWithDefault)
 
 
 {-| Generate random Keyboard arrows input
