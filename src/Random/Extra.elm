@@ -48,37 +48,22 @@ is always taken.
 frequency : List ( Float, Generator a ) -> Generator a -> Generator a
 frequency pairs defaultGenerator =
   let
-    frequencies : List Float
-    frequencies =
-      List.map (abs << fst) pairs
-
-    total : Float
     total =
-      List.sum frequencies * (toFloat <| List.length frequencies)
+      List.sum <| List.map (abs << fst) pairs
+
+    pick choices n =
+      case choices of
+        ((k,g)::rest) ->
+          if n <= k then g
+          else pick rest (n-k)
+        _ ->
+          defaultGenerator
+
   in
     if total == 0 then
       defaultGenerator
     else
-      float 0 total
-        `Random.andThen` (\randIndex ->
-                            let
-                              index =
-                                floor randIndex
-
-                              maybePair =
-                                get index pairs
-
-                              generator =
-                                case maybePair of
-                                  Nothing ->
-                                    defaultGenerator
-
-                                  Just ( _, gen ) ->
-                                    gen
-                            in
-                              generator
-                         )
-
+      float 0 total `Random.andThen` pick pairs
 
 {-| Convert a generator into a generator that only generates values
 that satisfy a given predicate.
