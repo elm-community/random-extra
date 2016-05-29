@@ -22,7 +22,7 @@ import Random.Extra exposing (flatMap)
 -}
 string : Int -> Generator Char -> Generator String
 string stringLength charGenerator =
-  map fromList (list stringLength charGenerator)
+    map fromList (list stringLength charGenerator)
 
 
 {-| Generates a random string of random length given the minimum length
@@ -30,7 +30,7 @@ and maximum length and a given character generator.
 -}
 rangeLengthString : Int -> Int -> Generator Char -> Generator String
 rangeLengthString minLength maxLength charGenerator =
-  flatMap (\len -> string len charGenerator) (int minLength maxLength)
+    flatMap (\len -> string len charGenerator) (int minLength maxLength)
 
 
 {-| Generate a random lowercase word with english characters of a given length.
@@ -39,7 +39,7 @@ are no guarantees that the result be an actual english word.
 -}
 englishWord : Int -> Generator String
 englishWord wordLength =
-  map fromList (list wordLength lowerCaseLatin)
+    map fromList (list wordLength lowerCaseLatin)
 
 
 {-| Generate a random lowercase word with english characters of random length
@@ -47,7 +47,7 @@ given a minimum length and maximum length.
 -}
 rangeLengthEnglishWord : Int -> Int -> Generator String
 rangeLengthEnglishWord minLength maxLength =
-  rangeLengthString minLength maxLength lowerCaseLatin
+    rangeLengthString minLength maxLength lowerCaseLatin
 
 
 {-| Generate a random lowercase word with english characters of random length
@@ -59,7 +59,7 @@ using `rangeLengthEnglishWord` for more granular control.
 -}
 anyEnglishWord : Generator String
 anyEnglishWord =
-  rangeLengthEnglishWord 1 34
+    rangeLengthEnglishWord 1 34
 
 
 {-| Generate a random capitalized word with english characters of a given length.
@@ -68,14 +68,12 @@ are no guarantees that the result be an actual english word.
 -}
 capitalizedEnglishWord : Int -> Generator String
 capitalizedEnglishWord wordLength =
-  (map
-    fromList
-    (map2
-      (::)
-      upperCaseLatin
-      (list (wordLength - 1) lowerCaseLatin)
+    (map fromList
+        (map2 (::)
+            upperCaseLatin
+            (list (wordLength - 1) lowerCaseLatin)
+        )
     )
-  )
 
 
 {-| Generate a random capitalized word with english characters of random length
@@ -83,7 +81,7 @@ given a minimum length and a maximum length.
 -}
 rangeLengthCapitalizedEnglishWord : Int -> Int -> Generator String
 rangeLengthCapitalizedEnglishWord minLength maxLength =
-  flatMap capitalizedEnglishWord (int minLength maxLength)
+    flatMap capitalizedEnglishWord (int minLength maxLength)
 
 
 {-| Generate a random capitalized word with english characters of random length
@@ -95,4 +93,4 @@ using `rangeLengthEnglishWord` for more granular control.
 -}
 anyCapitalizedEnglishWord : Generator String
 anyCapitalizedEnglishWord =
-  rangeLengthCapitalizedEnglishWord 1 34
+    rangeLengthCapitalizedEnglishWord 1 34

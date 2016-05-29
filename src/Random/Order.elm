@@ -14,9 +14,8 @@ import Random.Extra exposing (selectWithDefault)
 -}
 order : Generator Order
 order =
-  selectWithDefault
-    EQ
-    [ LT
-    , EQ
-    , GT
-    ]
+    selectWithDefault EQ
+        [ LT
+        , EQ
+        , GT
+        ]

@@ -15,14 +15,14 @@ import Random.Extra exposing (frequency)
 -}
 ok : Generator value -> Generator (Result error value)
 ok generator =
-  map Ok generator
+    map Ok generator
 
 
 {-| Generate an error result from a random generator of errors
 -}
 error : Generator error -> Generator (Result error value)
 error generator =
-  map Err generator
+    map Err generator
 
 
 {-| Generate an ok result or an error result with 50-50 chance
@@ -40,8 +40,8 @@ numbers to your bidding in your own custom generators.
 -}
 result : Generator error -> Generator value -> Generator (Result error value)
 result errorGenerator okGenerator =
-  frequency
-    [ ( 1, error errorGenerator )
-    , ( 1, ok okGenerator )
-    ]
-    (ok okGenerator)
+    frequency
+        [ ( 1, error errorGenerator )
+        , ( 1, ok okGenerator )
+        ]
+        (ok okGenerator)

@@ -15,7 +15,7 @@ import Random.Extra exposing (flatMap, constant)
 -}
 emptyList : Generator (List a)
 emptyList =
-  constant []
+    constant []
 
 
 {-| Generate a random list of random length given a minimum length and
@@ -23,4 +23,4 @@ a maximum length.
 -}
 rangeLengthList : Int -> Int -> Generator a -> Generator (List a)
 rangeLengthList minLength maxLength generator =
-  flatMap (\len -> list len generator) (int minLength maxLength)
+    flatMap (\len -> list len generator) (int minLength maxLength)

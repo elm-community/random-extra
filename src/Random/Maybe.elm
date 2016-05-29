@@ -16,22 +16,22 @@ import Maybe
 -}
 maybe : Generator a -> Generator (Maybe a)
 maybe generator =
-  frequency
-    [ ( 1, constant Nothing )
-    , ( 1, map Just generator )
-    ]
-    (constant Nothing)
+    frequency
+        [ ( 1, constant Nothing )
+        , ( 1, map Just generator )
+        ]
+        (constant Nothing)
 
 
 {-| Generate values from a maybe generator or a default value.
 -}
 withDefault : a -> Generator (Maybe a) -> Generator a
 withDefault value generator =
-  map (Maybe.withDefault value) generator
+    map (Maybe.withDefault value) generator
 
 
 {-| Generate values from a maybe generator or a default generator.
 -}
 withDefaultGenerator : Generator a -> Generator (Maybe a) -> Generator a
 withDefaultGenerator default generator =
-  flatMap (flip withDefault generator) default
+    flatMap (flip withDefault generator) default

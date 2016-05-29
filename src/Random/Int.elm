@@ -14,32 +14,32 @@ random generator algorithm.
 -}
 anyInt : Generator Int
 anyInt =
-  int minInt maxInt
+    int minInt maxInt
 
 
 {-| Generator that generates a positive int
 -}
 positiveInt : Generator Int
 positiveInt =
-  int 1 maxInt
+    int 1 maxInt
 
 
 {-| Generator that generates a negative int
 -}
 negativeInt : Generator Int
 negativeInt =
-  int minInt -1
+    int minInt -1
 
 
 {-| Generator that generates an int greater than a given int
 -}
 intGreaterThan : Int -> Generator Int
 intGreaterThan value =
-  int (value + 1) maxInt
+    int (value + 1) maxInt
 
 
 {-| Generator that generates an int less than a given int
 -}
 intLessThan : Int -> Generator Int
 intLessThan value =
-  int minInt (value - 1)
+    int minInt (value - 1)
