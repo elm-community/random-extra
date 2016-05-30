@@ -1,6 +1,8 @@
 module Random.Extra exposing (..)
 
-{-| Module providing extra functionality to the core Random module.
+{-| This module provides many common and general-purpose helper functions for
+core's Random library. You can find even more useful functions for a particular
+type in the other modules.
 
 # Constant Generators
 @docs constant
@@ -20,8 +22,6 @@ For `map` and `mapN` up through N=5, use the core library.
 
 # Flat Maps
 @docs flatMap, flatMap2, flatMap3, flatMap4, flatMap5, flatMap6
-
-
 -}
 
 import Random exposing (Generator, step, list, int, float, bool, map, andThen)

@@ -1,9 +1,12 @@
 module Random.Color exposing (..)
 
-{-| List of Color Generators
+{-| Color Generators
 
-# Generators
-@docs rgb, rgba, hsl, hsla, greyscale, grayscale, red, green, blue
+# Random Components
+@docs rgb, rgba, hsl, hsla
+
+# Random Colors
+@docs greyscale, grayscale, red, green, blue
 
 -}
 
@@ -46,7 +49,7 @@ greyscale =
     map Color.greyscale (float 0 1)
 
 
-{-| Alias for greyscale
+{-| Alias for greyscale.
 -}
 grayscale : Generator Color
 grayscale =

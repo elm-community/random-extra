@@ -1,15 +1,15 @@
 module Random.Dict exposing (..)
 
-{-| List of Dict Generators
+{-| Dict Generator helpers
 
 # Generators
-@docs dict, emptyDict, rangeLengthDict
+@docs dict, rangeLengthDict
 
 -}
 
 import Dict exposing (Dict, fromList, empty)
 import Random exposing (Generator, map, pair, list, int)
-import Random.Extra exposing (flatMap, constant)
+import Random.Extra exposing (flatMap)
 
 
 {-| Generate a random dict with given length, key generator, and value generator
@@ -19,13 +19,6 @@ import Random.Extra exposing (flatMap, constant)
 dict : Int -> Generator comparable -> Generator value -> Generator (Dict comparable value)
 dict dictLength keyGenerator valueGenerator =
     map (fromList) (list dictLength (pair keyGenerator valueGenerator))
-
-
-{-| Generator that always generates the empty dict
--}
-emptyDict : Generator (Dict comparable value)
-emptyDict =
-    constant empty
 
 
 {-| Generate a random dict of random length given a minimum length and

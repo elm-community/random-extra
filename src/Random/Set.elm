@@ -1,32 +1,21 @@
 module Random.Set exposing (..)
 
-{-| List of Random Set Generators
+{-| Random Set helpers.
 
-# Generators
-@docs empty, singleton, set, notInSet
+# Create a Set
+@docs set
 
-# Combinators
-@docs select, selectWithDefault
+# Create a Generator
+@docs sample
+
+# Modify a Generator
+@docs notInSet
 
 -}
 
 import Set exposing (Set)
 import Random exposing (Generator, map, andThen)
-import Random.Extra exposing (constant, filter)
-
-
-{-| Generator that always returns the empty set
--}
-empty : Generator (Set comparable)
-empty =
-    constant Set.empty
-
-
-{-| Generator that creates a singleton set from a generator
--}
-singleton : Generator comparable -> Generator (Set comparable)
-singleton generator =
-    map Set.singleton generator
+import Random.Extra exposing (filter)
 
 
 {-| Filter a generator of all values not in a given set.
@@ -37,19 +26,11 @@ notInSet set generator =
 
 
 {-| Select a value from a set uniformly at random, or `Nothing` for an empty set.
-Analogous to `Random.Extra.select` but with sets.
+Analogous to `Random.Extra.sample` but with sets.
 -}
-select : Set comparable -> Generator (Maybe comparable)
-select set =
+sample : Set comparable -> Generator (Maybe comparable)
+sample set =
     Random.Extra.sample (Set.toList set)
-
-
-{-| Select a value from a set uniformly at random, with a default.
-Analogous to `Random.Extra.selectWithDefault` but with sets.
--}
-selectWithDefault : comparable -> Set comparable -> Generator comparable
-selectWithDefault default set =
-    Random.Extra.sample (Set.toList set) |> map (Maybe.withDefault default)
 
 
 {-| Generate a set of at most the given size from a generator.
