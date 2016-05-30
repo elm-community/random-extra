@@ -6,16 +6,17 @@ module Random.Order exposing (..)
 @docs order
 -}
 
-import Random exposing (Generator)
-import Random.Extra exposing (selectWithDefault)
+import Random exposing (Generator, map)
+import Random.Extra exposing (sample)
 
 
 {-| Generate a random order with equal probability.
 -}
 order : Generator Order
 order =
-    selectWithDefault EQ
+    sample
         [ LT
         , EQ
         , GT
         ]
+        |> map (Maybe.withDefault EQ)

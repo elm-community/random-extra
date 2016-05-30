@@ -41,7 +41,7 @@ Analogous to `Random.Extra.select` but with sets.
 -}
 select : Set comparable -> Generator (Maybe comparable)
 select set =
-    Random.Extra.select (Set.toList set)
+    Random.Extra.sample (Set.toList set)
 
 
 {-| Select a value from a set uniformly at random, with a default.
@@ -49,7 +49,7 @@ Analogous to `Random.Extra.selectWithDefault` but with sets.
 -}
 selectWithDefault : comparable -> Set comparable -> Generator comparable
 selectWithDefault default set =
-    Random.Extra.selectWithDefault default (Set.toList set)
+    Random.Extra.sample (Set.toList set) |> map (Maybe.withDefault default)
 
 
 {-| Generate a set of at most the given size from a generator.

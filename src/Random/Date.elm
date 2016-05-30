@@ -10,14 +10,14 @@ module Random.Date exposing (..)
 import Date exposing (Day(..), Month(..), fromTime, toTime, Date)
 import Time exposing (Time)
 import Random exposing (Generator, map, int, float)
-import Random.Extra exposing (selectWithDefault)
+import Random.Extra exposing (sample)
 
 
 {-| Generate a random day of the week.
 -}
 day : Generator Day
 day =
-    selectWithDefault Mon
+    sample
         [ Mon
         , Tue
         , Wed
@@ -26,13 +26,14 @@ day =
         , Sat
         , Sun
         ]
+        |> map (Maybe.withDefault Mon)
 
 
 {-| Generate a random month of the year.
 -}
 month : Generator Month
 month =
-    selectWithDefault Jan
+    sample
         [ Jan
         , Feb
         , Mar
@@ -46,6 +47,7 @@ month =
         , Nov
         , Dec
         ]
+        |> map (Maybe.withDefault Jan)
 
 
 {-| Generate a random year given a start year and end year (alias for `int`)

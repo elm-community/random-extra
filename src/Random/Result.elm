@@ -8,7 +8,7 @@ module Random.Result exposing (..)
 -}
 
 import Random exposing (Generator, generate, map, float)
-import Random.Extra exposing (frequency)
+import Random.Extra exposing (frequency, choices)
 
 
 {-| Generate an ok result from a random generator of values

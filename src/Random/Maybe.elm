@@ -8,7 +8,7 @@ module Random.Maybe exposing (..)
 -}
 
 import Random exposing (Generator, map)
-import Random.Extra exposing (constant, frequency, flatMap)
+import Random.Extra exposing (constant, choices, frequency, flatMap)
 import Maybe
 
 

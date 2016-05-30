@@ -8,8 +8,8 @@ module Random.Dict exposing (..)
 -}
 
 import Dict exposing (Dict, fromList, empty)
-import Random exposing (Generator, map, list, int)
-import Random.Extra exposing (zip, flatMap, constant)
+import Random exposing (Generator, map, pair, list, int)
+import Random.Extra exposing (flatMap, constant)
 
 
 {-| Generate a random dict with given length, key generator, and value generator
@@ -18,7 +18,7 @@ import Random.Extra exposing (zip, flatMap, constant)
 -}
 dict : Int -> Generator comparable -> Generator value -> Generator (Dict comparable value)
 dict dictLength keyGenerator valueGenerator =
-    map (fromList) (list dictLength (zip keyGenerator valueGenerator))
+    map (fromList) (list dictLength (pair keyGenerator valueGenerator))
 
 
 {-| Generator that always generates the empty dict
