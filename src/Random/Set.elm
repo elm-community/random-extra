@@ -15,7 +15,7 @@ module Random.Set exposing (..)
 
 import Set exposing (Set)
 import Random exposing (Generator, map, andThen)
-import Random.Extra exposing (filter)
+import Random.Extra exposing (constant, filter)
 
 
 {-| Filter a generator of all values not in a given set.
