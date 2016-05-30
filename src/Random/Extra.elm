@@ -10,7 +10,7 @@ For `map` and `mapN` up through N=5, use the core library.
 @docs map6, andMap
 
 # New Generators
-@docs oneIn, maybe, choice
+@docs oneIn, maybe, result, choice
 
 # Working With Lists
 @docs choices, frequency, sample, together
@@ -212,6 +212,20 @@ maybe genBool genA =
                         map Just genA
                     else
                         constant Nothing
+
+
+{-| Produce an `Ok` a value on `True`, and an `Err` value on `False`.
+
+You can use `bool` or `oneIn n` for the first argument.
+-}
+result : Generator Bool -> Generator err -> Generator val -> Generator (Result err val)
+result genBool genErr genVal =
+    genBool
+        `andThen` \b ->
+                    if b then
+                        map Ok genVal
+                    else
+                        map Err genErr
 
 
 {-| -}
