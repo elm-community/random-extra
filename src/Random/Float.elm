@@ -3,10 +3,10 @@ module Random.Float exposing (..)
 {-| List of Float Generators
 
 # Generators
-@docs anyFloat, positiveFloat, negativeFloat, floatGreaterThan, floatLessThan, probability, negativeProbability, unitRange
+@docs anyFloat, positiveFloat, negativeFloat, floatGreaterThan, floatLessThan
 
 # Gaussian Generators
-@docs normal, standardNormal, gaussian
+@docs normal, standardNormal
 
 -}
 
@@ -48,27 +48,6 @@ floatLessThan value =
     float (toFloat minInt) value
 
 
-{-| Generator that generates a float between 0 and 1
--}
-probability : Generator Float
-probability =
-    float 0 1
-
-
-{-| Generator that generates a float between -1 and 0
--}
-negativeProbability : Generator Float
-negativeProbability =
-    float -1 0
-
-
-{-| Generator that generates a float between - 1 and 1
--}
-unitRange : Generator Float
-unitRange =
-    float -1 1
-
-
 {-| Create a generator of floats that is normally distributed with
 given minimum, maximum, and standard deviation.
 -}
@@ -97,10 +76,3 @@ a uniform distribution)
 standardNormal : Generator Float
 standardNormal =
     normal (toFloat minInt + 1) (toFloat maxInt) 1
-
-
-{-| Alias for `normal`.
--}
-gaussian : Float -> Float -> Float -> Generator Float
-gaussian =
-    normal

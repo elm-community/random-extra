@@ -15,10 +15,7 @@
         "Random.Extra",
         "Random.Float",
         "Random.Int",
-        "Random.List",
-        "Random.Maybe",
         "Random.Order",
-        "Random.Result",
         "Random.Set",
         "Random.String"
     ],

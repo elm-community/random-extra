@@ -13,7 +13,7 @@ For `map` and `mapN` up through N=5, use the core library.
 @docs oneIn, maybe, result, choice
 
 # Working With Lists
-@docs choices, frequency, sample, together
+@docs choices, frequency, sample, together, rangeLengthList
 
 # Filtered Generators
 @docs filter
@@ -226,6 +226,14 @@ result genBool genErr genVal =
                         map Ok genVal
                     else
                         map Err genErr
+
+
+{-| Generate a random list of random length given a minimum length and
+a maximum length.
+-}
+rangeLengthList : Int -> Int -> Generator a -> Generator (List a)
+rangeLengthList minLength maxLength generator =
+    flatMap (\len -> list len generator) (int minLength maxLength)
 
 
 {-| -}

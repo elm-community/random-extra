@@ -3,7 +3,7 @@ module Random.Array exposing (..)
 {-| List of Array Generators
 
 # Generate an Array
-@docs array, emptyArray, rangeLengthArray
+@docs array, rangeLengthArray
 
 # Random Operations on an Array
 @docs sample, choose, shuffle
@@ -22,13 +22,6 @@ import Random.Extra exposing (flatMap, constant)
 array : Int -> Generator a -> Generator (Array a)
 array arrayLength generator =
     map fromList (list arrayLength generator)
-
-
-{-| Generator that always generates the empty array
--}
-emptyArray : Generator (Array a)
-emptyArray =
-    constant empty
 
 
 {-| Generate a random array of random length given a minimum length and
@@ -53,7 +46,7 @@ sample arr =
 
 {-| Sample without replacement: produce a randomly selected element of the
 array, and the array with that element omitted (shifting all later elements
-down).
+down). If the array is empty, the selected element will be `Nothing`.
 -}
 choose : Array a -> Generator ( Maybe a, Array a )
 choose arr =
@@ -95,7 +88,7 @@ shuffle arr =
         constant arr
     else
         let
-            --helper : (List a, Array a) -> Generator (List a, Array a)
+            helper : ( List a, Array a ) -> Generator ( List a, Array a )
             helper ( done, remaining ) =
                 choose remaining
                     `Random.andThen` (\( m_val, shorter ) ->
