@@ -12,7 +12,7 @@ module Random.Char exposing (..)
 
 import Char exposing (fromCode)
 import Random exposing (Generator, map, int)
-import Random.Extra exposing (merge)
+import Random.Extra exposing (choices)
 
 
 {-| Generate a random character within a certain keyCode range
@@ -42,7 +42,7 @@ lowerCaseLatin =
 -}
 latin : Generator Char
 latin =
-    merge lowerCaseLatin upperCaseLatin
+    choices [ lowerCaseLatin, upperCaseLatin ]
 
 
 {-| Generate a random English Letter (alias for `latin`)

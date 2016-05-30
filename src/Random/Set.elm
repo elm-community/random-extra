@@ -12,7 +12,7 @@ module Random.Set exposing (..)
 
 import Set exposing (Set)
 import Random exposing (Generator, map, andThen)
-import Random.Extra exposing (constant, dropIf, keepIf)
+import Random.Extra exposing (constant, filter)
 
 
 {-| Generator that always returns the empty set
@@ -33,7 +33,7 @@ singleton generator =
 -}
 notInSet : Set comparable -> Generator comparable -> Generator comparable
 notInSet set generator =
-    dropIf (flip Set.member set) generator
+    filter (not << flip Set.member set) generator
 
 
 {-| Select a value from a set uniformly at random, or `Nothing` for an empty set.

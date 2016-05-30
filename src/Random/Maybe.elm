@@ -16,11 +16,10 @@ import Maybe
 -}
 maybe : Generator a -> Generator (Maybe a)
 maybe generator =
-    frequency
-        [ ( 1, constant Nothing )
-        , ( 1, map Just generator )
+    choices
+        [ constant Nothing
+        , map Just generator
         ]
-        (constant Nothing)
 
 
 {-| Generate values from a maybe generator or a default value.

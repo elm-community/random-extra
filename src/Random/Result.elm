@@ -25,23 +25,13 @@ error generator =
     map Err generator
 
 
-{-| Generate an ok result or an error result with 50-50 chance
+{-| Generate an `Ok` result or an `Err` result with 50-50 chance.
 
-This is simply implemented as follows:
-
-    result errorGenerator okGenerator =
-      frequency
-        [ (1, error errorGenerator)
-        , (1, ok okGenerator)
-        ] (ok okGenerator)
-
-If you want to generate results with a different frequency, tweak those
-numbers to your bidding in your own custom generators.
+If you want to generate results with a different frequency, use `frequency`.
 -}
 result : Generator error -> Generator value -> Generator (Result error value)
 result errorGenerator okGenerator =
-    frequency
-        [ ( 1, error errorGenerator )
-        , ( 1, ok okGenerator )
+    choices
+        [ error errorGenerator
+        , ok okGenerator
         ]
-        (ok okGenerator)
