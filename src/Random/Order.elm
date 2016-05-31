@@ -1,8 +1,7 @@
 module Random.Order exposing (..)
 
-{-| List of Order Generators
+{-| An extra random generator for the `Order` type.
 
-# Generators
 @docs order
 -}
 

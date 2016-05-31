@@ -1,8 +1,8 @@
 module Random.String exposing (..)
 
-{-| List of String Generators
+{-| Extra randomized functions on strings.
 
-# Simple Generators
+# Create a String
 @docs string, rangeLengthString
 
 -}

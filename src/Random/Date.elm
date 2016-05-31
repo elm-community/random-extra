@@ -1,6 +1,6 @@
 module Random.Date exposing (..)
 
-{-| List of date Generators
+{-| Extra randomized functions on dates.
 
 # Generators
 @docs date, day, month, year, hour, hour24, hour12, minute, second

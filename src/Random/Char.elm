@@ -1,6 +1,6 @@
 module Random.Char exposing (..)
 
-{-| List of Char Generators
+{-| Extra randomized functions on characters.
 
 # Basic Generators
 @docs char, lowerCaseLatin, upperCaseLatin, latin, english, ascii, unicode

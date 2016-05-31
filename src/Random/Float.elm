@@ -1,8 +1,8 @@
 module Random.Float exposing (..)
 
-{-| List of Float Generators
+{-| Extra randomized functions on floats.
 
-# Generators
+# Arithmetic Generators
 @docs anyFloat, positiveFloat, negativeFloat, floatGreaterThan, floatLessThan
 
 # Gaussian Generators
@@ -10,38 +10,38 @@ module Random.Float exposing (..)
 
 -}
 
-import Random exposing (Generator, map, float, maxInt, minInt, generate)
+import Random exposing (Generator, map, float, maxInt, minInt)
 
 
-{-| Generator that generates any float
+{-| A generator that generates any float
 -}
 anyFloat : Generator Float
 anyFloat =
     float (toFloat minInt) (toFloat maxInt)
 
 
-{-| Generator that generates any positive float
+{-| A generator that generates any positive float
 -}
 positiveFloat : Generator Float
 positiveFloat =
     float 0 (toFloat maxInt)
 
 
-{-| Generator that generates any negative float
+{-| A generator that generates any negative float
 -}
 negativeFloat : Generator Float
 negativeFloat =
     float (toFloat minInt) 0
 
 
-{-| Generator that generates a float greater than a given float
+{-| A generator that generates a float greater than a given float
 -}
 floatGreaterThan : Float -> Generator Float
 floatGreaterThan value =
     float value (toFloat maxInt)
 
 
-{-| Generator that generates a float less than a given float
+{-| A generator that generates a float less than a given float
 -}
 floatLessThan : Float -> Generator Float
 floatLessThan value =
@@ -70,7 +70,7 @@ normal start end standardDeviation =
         map (normalDistribution ((end - start) / 2) standardDeviation) (float start end)
 
 
-{-| Generator that follows a standard normal distribution (as opposed to
+{-| A generator that follows a standard normal distribution (as opposed to
 a uniform distribution)
 -}
 standardNormal : Generator Float

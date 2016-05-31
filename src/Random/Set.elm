@@ -1,6 +1,6 @@
 module Random.Set exposing (..)
 
-{-| Random Set helpers.
+{-| Extra randomized functions on sets.
 
 # Create a Set
 @docs set

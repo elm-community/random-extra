@@ -1,13 +1,13 @@
 module Random.Dict exposing (..)
 
-{-| Dict Generator helpers
+{-| Extra randomized functions on dicts.
 
 # Generators
 @docs dict, rangeLengthDict
 
 -}
 
-import Dict exposing (Dict, fromList, empty)
+import Dict exposing (Dict, fromList)
 import Random exposing (Generator, map, pair, list, int)
 import Random.Extra exposing (flatMap)
 

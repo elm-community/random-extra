@@ -1,11 +1,11 @@
 module Random.Array exposing (..)
 
-{-| List of Array Generators
+{-| Extra randomized functions on arrays.
 
-# Generate an Array
+# Create an Array
 @docs array, rangeLengthArray
 
-# Random Operations on an Array
+# Work with an Array
 @docs sample, choose, shuffle
 
 -}

@@ -14,13 +14,16 @@ For `map` and `mapN` up through N=5, use the core library.
 # New Generators
 @docs oneIn, maybe, result, choice
 
-# Working With Lists
+# Working with Lists
 @docs choices, frequency, sample, together, rangeLengthList
 
 # Filtered Generators
 @docs filter
 
 # Flat Maps
+These functions are like `mapN` except the function you pass in does not return
+an exact value, but instead another generator. That means you can take in several
+random arguments to drive more randomness.
 @docs flatMap, flatMap2, flatMap3, flatMap4, flatMap5, flatMap6
 -}
 

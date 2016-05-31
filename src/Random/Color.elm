@@ -1,11 +1,11 @@
 module Random.Color exposing (..)
 
-{-| Color Generators
+{-| Extra randomized functions on colors.
 
-# Random Components
+# Random Colors by Components
 @docs rgb, rgba, hsl, hsla
 
-# Random Colors
+# Random Colors by Shade
 @docs greyscale, grayscale, red, green, blue
 
 -}
