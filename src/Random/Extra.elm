@@ -15,7 +15,7 @@ For `map` and `mapN` up through N=5, use the core library.
 @docs oneIn, maybe, result, choice
 
 # Working with Lists
-@docs choices, frequency, sample, together, rangeLengthList
+@docs choices, frequency, sample, combine, rangeLengthList
 
 # Filtered Generators
 @docs filter
@@ -165,14 +165,14 @@ frequency pairs =
 
 {-| Turn a list of generators into a generator of lists.
 -}
-together : List (Generator a) -> Generator (List a)
-together generators =
+combine : List (Generator a) -> Generator (List a)
+combine generators =
     case generators of
         [] ->
             constant []
 
         g :: gs ->
-            Random.map2 (::) g (together gs)
+            Random.map2 (::) g (combine gs)
 
 
 {-| Given a list, choose an element uniformly at random. `Nothing` is only
