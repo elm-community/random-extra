@@ -49,30 +49,16 @@ floatLessThan value =
 
 
 {-| Create a generator of floats that is normally distributed with
-given minimum, maximum, and standard deviation.
+given mean and standard deviation.
 -}
-normal : Float -> Float -> Float -> Generator Float
-normal start end standardDeviation =
-    let
-        normalDistribution mean stdDev x =
-            if stdDev == 0 then
-                x
-            else
-                let
-                    scale =
-                        1 / (stdDev * sqrt (2 * pi))
-
-                    exponent =
-                        ((x - mean) * (x - mean)) / (2 * stdDev * stdDev)
-                in
-                    scale * (e ^ -exponent)
-    in
-        map (normalDistribution ((end - start) / 2) standardDeviation) (float start end)
+normal : Float -> Float -> Generator Float
+normal mean stdDev = map (\u -> u * stdDev + mean) standardNormal
 
 
 {-| A generator that follows a standard normal distribution (as opposed to
 a uniform distribution)
 -}
 standardNormal : Generator Float
-standardNormal =
-    normal (toFloat minInt + 1) (toFloat maxInt) 1
+standardNormal = Random.map2
+  (\u theta -> sqrt (-2 * logBase e (1 - max 0 u)) * cos theta
+  (float 0 1) (float 0 (2 * pi))
