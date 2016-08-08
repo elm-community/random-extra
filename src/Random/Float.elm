@@ -60,5 +60,5 @@ a uniform distribution)
 -}
 standardNormal : Generator Float
 standardNormal = Random.map2
-  (\u theta -> sqrt (-2 * logBase e (1 - u)) * cos theta
+  (\u theta -> sqrt (-2 * logBase e (1 - max 0 u)) * cos theta
   (float 0 1) (float 0 (2 * pi))
