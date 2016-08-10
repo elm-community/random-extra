@@ -52,13 +52,16 @@ floatLessThan value =
 given mean and standard deviation.
 -}
 normal : Float -> Float -> Generator Float
-normal mean stdDev = map (\u -> u * stdDev + mean) standardNormal
+normal mean stdDev =
+    map (\u -> u * stdDev + mean) standardNormal
 
 
 {-| A generator that follows a standard normal distribution (as opposed to
 a uniform distribution)
 -}
 standardNormal : Generator Float
-standardNormal = Random.map2
-  (\u theta -> sqrt (-2 * logBase e (1 - max 0 u)) * cos theta
-  (float 0 1) (float 0 (2 * pi))
+standardNormal =
+    Random.map2
+        (\u theta -> sqrt (-2 * logBase e (1 - max 0 u)) * cos theta)
+        (float 0 1)
+        (float 0 (2 * pi))
