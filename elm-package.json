@@ -1,5 +1,5 @@
 {
-    "version": "1.0.0",
+    "version": "2.0.0",
     "summary": "Extra functions for the core Random library",
     "repository": "https://github.com/elm-community/random-extra.git",
     "license": "MIT",
