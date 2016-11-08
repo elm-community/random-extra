@@ -58,8 +58,8 @@ map6 f generatorA generatorB generatorC generatorD generatorE generatorF =
         |> andMap genEmail
 -}
 andMap : Generator a -> Generator (a -> b) -> Generator b
-andMap generator funcGenerator =
-    Random.map2 (<|) funcGenerator generator
+andMap =
+    Random.map2 (|>)
 
 
 {-| Filter a generator so that all generated values satisfy the given predicate.
