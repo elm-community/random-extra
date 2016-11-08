@@ -11,8 +11,8 @@ module Random.Array exposing (..)
 -}
 
 import Array exposing (Array, fromList, empty)
-import Random exposing (Generator, map, list, int)
-import Random.Extra exposing (flatMap, constant)
+import Random exposing (Generator, map, list, int, andThen)
+import Random.Extra exposing (constant)
 
 
 {-| Generate a random array of given size given a random generator
@@ -29,7 +29,7 @@ a maximum length.
 -}
 rangeLengthArray : Int -> Int -> Generator a -> Generator (Array a)
 rangeLengthArray minLength maxLength generator =
-    flatMap (\len -> array len generator) (int minLength maxLength)
+    andThen (\len -> array len generator) (int minLength maxLength)
 
 
 {-| Sample with replacement: produce a randomly selected element of the
@@ -91,13 +91,14 @@ shuffle arr =
             helper : ( List a, Array a ) -> Generator ( List a, Array a )
             helper ( done, remaining ) =
                 choose remaining
-                    `Random.andThen` (\( m_val, shorter ) ->
-                                        case m_val of
-                                            Nothing ->
-                                                constant ( done, shorter )
+                    |> andThen
+                        (\( m_val, shorter ) ->
+                            case m_val of
+                                Nothing ->
+                                    constant ( done, shorter )
 
-                                            Just val ->
-                                                helper ( val :: done, shorter )
-                                     )
+                                Just val ->
+                                    helper ( val :: done, shorter )
+                        )
         in
-            Random.map (fst >> Array.fromList) (helper ( [], arr ))
+            Random.map (Tuple.first >> Array.fromList) (helper ( [], arr ))

@@ -47,14 +47,16 @@ set maxLength generator =
                 constant set
             else
                 generator
-                    `andThen` \val ->
-                                let
-                                    newSet =
-                                        Set.insert val set
-                                in
-                                    if Set.size newSet == Set.size set then
-                                        helper set remaining (strikes + 1)
-                                    else
-                                        helper newSet (remaining - 1) 0
+                    |> andThen
+                        (\val ->
+                            let
+                                newSet =
+                                    Set.insert val set
+                            in
+                                if Set.size newSet == Set.size set then
+                                    helper set remaining (strikes + 1)
+                                else
+                                    helper newSet (remaining - 1) 0
+                        )
     in
         helper Set.empty maxLength 0

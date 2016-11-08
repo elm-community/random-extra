@@ -8,8 +8,7 @@ module Random.Dict exposing (..)
 -}
 
 import Dict exposing (Dict, fromList)
-import Random exposing (Generator, map, pair, list, int)
-import Random.Extra exposing (flatMap)
+import Random exposing (Generator, map, pair, list, int, andThen)
 
 
 {-| Generate a random dict with given length, key generator, and value generator
@@ -26,4 +25,4 @@ a maximum length.
 -}
 rangeLengthDict : Int -> Int -> Generator comparable -> Generator value -> Generator (Dict comparable value)
 rangeLengthDict minLength maxLength keyGenerator valueGenerator =
-    flatMap (\len -> dict len keyGenerator valueGenerator) (int minLength maxLength)
+    andThen (\len -> dict len keyGenerator valueGenerator) (int minLength maxLength)
