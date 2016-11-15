@@ -8,8 +8,7 @@ module Random.String exposing (..)
 -}
 
 import String exposing (fromList)
-import Random exposing (Generator, map, map2, list, int)
-import Random.Extra exposing (flatMap)
+import Random exposing (Generator, map, map2, list, int, andThen)
 
 
 {-| Generate a random string of a given length with a given character generator
@@ -26,4 +25,4 @@ and maximum length and a given character generator.
 -}
 rangeLengthString : Int -> Int -> Generator Char -> Generator String
 rangeLengthString minLength maxLength charGenerator =
-    flatMap (\len -> string len charGenerator) (int minLength maxLength)
+    andThen (\len -> string len charGenerator) (int minLength maxLength)

@@ -7,7 +7,7 @@ module Random.List exposing (choose, shuffle)
 
 -}
 
-import Random exposing (Generator)
+import Random exposing (Generator, andThen)
 import Random.Extra exposing (constant)
 
 
@@ -62,7 +62,7 @@ shuffle list =
             helper : ( List a, List a ) -> Generator ( List a, List a )
             helper ( done, remaining ) =
                 choose remaining
-                    `Random.andThen`
+                    |> andThen
                         (\( m_val, shorter ) ->
                             case m_val of
                                 Nothing ->
@@ -72,4 +72,4 @@ shuffle list =
                                     helper ( val :: done, shorter )
                         )
         in
-            Random.map fst (helper ( [], list ))
+            Random.map Tuple.first (helper ( [], list ))

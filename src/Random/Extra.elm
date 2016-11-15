@@ -20,11 +20,11 @@ For `map` and `mapN` up through N=5, use the core library.
 # Filtered Generators
 @docs filter
 
-# Flat Maps
+# andThenN
 These functions are like `mapN` except the function you pass in does not return
 an exact value, but instead another generator. That means you can take in several
 random arguments to drive more randomness.
-@docs flatMap, flatMap2, flatMap3, flatMap4, flatMap5, flatMap6
+@docs andThen2, andThen3, andThen4, andThen5, andThen6
 -}
 
 import Random exposing (Generator, step, list, int, float, bool, map, andThen)
@@ -43,23 +43,23 @@ constant value =
 -}
 map6 : (a -> b -> c -> d -> e -> f -> g) -> Generator a -> Generator b -> Generator c -> Generator d -> Generator e -> Generator f -> Generator g
 map6 f generatorA generatorB generatorC generatorD generatorE generatorF =
-    Random.map5 f generatorA generatorB generatorC generatorD generatorE `andMap` generatorF
+    Random.map5 f generatorA generatorB generatorC generatorD generatorE |> andMap generatorF
 
 
 {-| Map over any number of generators.
 
     randomPerson : Generator Person
     randomPerson =
-      person `map` genFirstName
-          `andMap` genLastName
-          `andMap` genBirthday
-          `andMap` genPhoneNumber
-          `andMap` genAddress
-          `andMap` genEmail
+      map person genFirstName
+        |> andMap genLastName
+        |> andMap genBirthday
+        |> andMap genPhoneNumber
+        |> andMap genAddress
+        |> andMap genEmail
 -}
-andMap : Generator (a -> b) -> Generator a -> Generator b
-andMap funcGenerator generator =
-    Random.map2 (<|) funcGenerator generator
+andMap : Generator a -> Generator (a -> b) -> Generator b
+andMap =
+    Random.map2 (|>)
 
 
 {-| Filter a generator so that all generated values satisfy the given predicate.
@@ -81,12 +81,13 @@ sad. You should also avoid predicates that are merely very difficult to satisfy.
 filter : (a -> Bool) -> Generator a -> Generator a
 filter predicate generator =
     generator
-        `andThen` (\a ->
-                    if predicate a then
-                        constant a
-                    else
-                        filter predicate generator
-                  )
+        |> andThen
+            (\a ->
+                if predicate a then
+                    constant a
+                else
+                    filter predicate generator
+            )
 
 
 {-| Produce `True` one-in-n times on average.
@@ -147,7 +148,7 @@ frequency : List ( Float, Generator a ) -> Generator a
 frequency pairs =
     let
         total =
-            List.sum <| List.map (abs << fst) pairs
+            List.sum <| List.map (abs << Tuple.first) pairs
 
         pick choices n =
             case choices of
@@ -160,7 +161,7 @@ frequency pairs =
                 _ ->
                     Debug.crash "Empty list passed to Random.Extra.frequency!"
     in
-        float 0 total `Random.andThen` pick pairs
+        float 0 total |> andThen (pick pairs)
 
 
 {-| Turn a list of generators into a generator of lists.
@@ -210,11 +211,13 @@ You can use `bool` or `oneIn n` for the first argument.
 maybe : Generator Bool -> Generator a -> Generator (Maybe a)
 maybe genBool genA =
     genBool
-        `andThen` \b ->
-                    if b then
-                        map Just genA
-                    else
-                        constant Nothing
+        |> andThen
+            (\b ->
+                if b then
+                    map Just genA
+                else
+                    constant Nothing
+            )
 
 
 {-| Produce an `Ok` a value on `True`, and an `Err` value on `False`.
@@ -224,11 +227,13 @@ You can use `bool` or `oneIn n` for the first argument.
 result : Generator Bool -> Generator err -> Generator val -> Generator (Result err val)
 result genBool genErr genVal =
     genBool
-        `andThen` \b ->
-                    if b then
-                        map Ok genVal
-                    else
-                        map Err genErr
+        |> andThen
+            (\b ->
+                if b then
+                    map Ok genVal
+                else
+                    map Err genErr
+            )
 
 
 {-| Generate a random list of random length given a minimum length and
@@ -236,100 +241,114 @@ a maximum length.
 -}
 rangeLengthList : Int -> Int -> Generator a -> Generator (List a)
 rangeLengthList minLength maxLength generator =
-    flatMap (\len -> list len generator) (int minLength maxLength)
+    andThen (\len -> list len generator) (int minLength maxLength)
 
 
 {-| -}
-flatMap : (a -> Generator b) -> Generator a -> Generator b
-flatMap =
-    flip Random.andThen
-
-
-{-| -}
-flatMap2 : (a -> b -> Generator c) -> Generator a -> Generator b -> Generator c
-flatMap2 constructor generatorA generatorB =
+andThen2 : (a -> b -> Generator c) -> Generator a -> Generator b -> Generator c
+andThen2 constructor generatorA generatorB =
     generatorA
-        `Random.andThen` (\a ->
-                            generatorB
-                                `Random.andThen` (\b ->
-                                                    constructor a b
-                                                 )
-                         )
+        |> andThen
+            (\a ->
+                generatorB
+                    |> andThen
+                        (\b ->
+                            constructor a b
+                        )
+            )
 
 
 {-| -}
-flatMap3 : (a -> b -> c -> Generator d) -> Generator a -> Generator b -> Generator c -> Generator d
-flatMap3 constructor generatorA generatorB generatorC =
+andThen3 : (a -> b -> c -> Generator d) -> Generator a -> Generator b -> Generator c -> Generator d
+andThen3 constructor generatorA generatorB generatorC =
     generatorA
-        `Random.andThen` (\a ->
-                            generatorB
-                                `Random.andThen` (\b ->
-                                                    generatorC
-                                                        `Random.andThen` (\c ->
-                                                                            constructor a b c
-                                                                         )
-                                                 )
-                         )
+        |> andThen
+            (\a ->
+                generatorB
+                    |> andThen
+                        (\b ->
+                            generatorC
+                                |> andThen
+                                    (\c ->
+                                        constructor a b c
+                                    )
+                        )
+            )
 
 
 {-| -}
-flatMap4 : (a -> b -> c -> d -> Generator e) -> Generator a -> Generator b -> Generator c -> Generator d -> Generator e
-flatMap4 constructor generatorA generatorB generatorC generatorD =
+andThen4 : (a -> b -> c -> d -> Generator e) -> Generator a -> Generator b -> Generator c -> Generator d -> Generator e
+andThen4 constructor generatorA generatorB generatorC generatorD =
     generatorA
-        `Random.andThen` (\a ->
-                            generatorB
-                                `Random.andThen` (\b ->
-                                                    generatorC
-                                                        `Random.andThen` (\c ->
-                                                                            generatorD
-                                                                                `Random.andThen` (\d ->
-                                                                                                    constructor a b c d
-                                                                                                 )
-                                                                         )
-                                                 )
-                         )
+        |> andThen
+            (\a ->
+                generatorB
+                    |> andThen
+                        (\b ->
+                            generatorC
+                                |> andThen
+                                    (\c ->
+                                        generatorD
+                                            |> andThen
+                                                (\d ->
+                                                    constructor a b c d
+                                                )
+                                    )
+                        )
+            )
 
 
 {-| -}
-flatMap5 : (a -> b -> c -> d -> e -> Generator f) -> Generator a -> Generator b -> Generator c -> Generator d -> Generator e -> Generator f
-flatMap5 constructor generatorA generatorB generatorC generatorD generatorE =
+andThen5 : (a -> b -> c -> d -> e -> Generator f) -> Generator a -> Generator b -> Generator c -> Generator d -> Generator e -> Generator f
+andThen5 constructor generatorA generatorB generatorC generatorD generatorE =
     generatorA
-        `Random.andThen` (\a ->
-                            generatorB
-                                `Random.andThen` (\b ->
-                                                    generatorC
-                                                        `Random.andThen` (\c ->
-                                                                            generatorD
-                                                                                `Random.andThen` (\d ->
-                                                                                                    generatorE
-                                                                                                        `Random.andThen` (\e ->
-                                                                                                                            constructor a b c d e
-                                                                                                                         )
-                                                                                                 )
-                                                                         )
-                                                 )
-                         )
+        |> andThen
+            (\a ->
+                generatorB
+                    |> andThen
+                        (\b ->
+                            generatorC
+                                |> andThen
+                                    (\c ->
+                                        generatorD
+                                            |> andThen
+                                                (\d ->
+                                                    generatorE
+                                                        |> andThen
+                                                            (\e ->
+                                                                constructor a b c d e
+                                                            )
+                                                )
+                                    )
+                        )
+            )
 
 
 {-| -}
-flatMap6 : (a -> b -> c -> d -> e -> f -> Generator g) -> Generator a -> Generator b -> Generator c -> Generator d -> Generator e -> Generator f -> Generator g
-flatMap6 constructor generatorA generatorB generatorC generatorD generatorE generatorF =
+andThen6 : (a -> b -> c -> d -> e -> f -> Generator g) -> Generator a -> Generator b -> Generator c -> Generator d -> Generator e -> Generator f -> Generator g
+andThen6 constructor generatorA generatorB generatorC generatorD generatorE generatorF =
     generatorA
-        `Random.andThen` (\a ->
-                            generatorB
-                                `Random.andThen` (\b ->
-                                                    generatorC
-                                                        `Random.andThen` (\c ->
-                                                                            generatorD
-                                                                                `Random.andThen` (\d ->
-                                                                                                    generatorE
-                                                                                                        `Random.andThen` (\e ->
-                                                                                                                            generatorF
-                                                                                                                                `Random.andThen` (\f ->
-                                                                                                                                                    constructor a b c d e f
-                                                                                                                                                 )
-                                                                                                                         )
-                                                                                                 )
-                                                                         )
-                                                 )
-                         )
+        |> andThen
+            (\a ->
+                generatorB
+                    |> andThen
+                        (\b ->
+                            generatorC
+                                |> andThen
+                                    (\c ->
+                                        generatorD
+                                            |> andThen
+                                                (\d ->
+                                                    generatorE
+                                                        |> andThen
+                                                            (\e ->
+                                                                generatorF
+                                                                    |> andThen
+                                                                        (\f ->
+                                                                            constructor a b c d e f
+                                                                        )
+                                                            )
+                                                )
+                                    )
+                        )
+            )
