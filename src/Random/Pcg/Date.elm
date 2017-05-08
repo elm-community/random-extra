@@ -1,4 +1,4 @@
-module Random.Date exposing (..)
+module Random.Pcg.Date exposing (..)
 
 {-| Extra randomized functions on dates.
 
@@ -9,8 +9,8 @@ module Random.Date exposing (..)
 
 import Date exposing (Day(..), Month(..), fromTime, toTime, Date)
 import Time exposing (Time)
-import Random exposing (Generator, map, int, float)
-import Random.Extra exposing (sample)
+import Random.Pcg exposing (Generator, map, int, float)
+import Random.Pcg.Extra exposing (sample)
 
 
 {-| Generate a random day of the week.

@@ -1,4 +1,4 @@
-module Random.Set exposing (..)
+module Random.Pcg.Set exposing (..)
 
 {-| Extra randomized functions on sets.
 
@@ -14,8 +14,8 @@ module Random.Set exposing (..)
 -}
 
 import Set exposing (Set)
-import Random exposing (Generator, map, andThen)
-import Random.Extra exposing (constant, filter)
+import Random.Pcg exposing (Generator, map, andThen)
+import Random.Pcg.Extra exposing (constant, filter)
 
 
 {-| Filter a generator of all values not in a given set.
@@ -26,11 +26,11 @@ notInSet set generator =
 
 
 {-| Select a value from a set uniformly at random, or `Nothing` for an empty set.
-Analogous to `Random.Extra.sample` but with sets.
+Analogous to `Random.Pcg.Extra.sample` but with sets.
 -}
 sample : Set comparable -> Generator (Maybe comparable)
 sample set =
-    Random.Extra.sample (Set.toList set)
+    Random.Pcg.Extra.sample (Set.toList set)
 
 
 {-| Generate a set of at most the given size from a generator.

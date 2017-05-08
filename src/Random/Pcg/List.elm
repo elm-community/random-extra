@@ -1,4 +1,4 @@
-module Random.List exposing (choose, shuffle)
+module Random.Pcg.List exposing (choose, shuffle)
 
 {-| Extra randomized functions on lists.
 
@@ -7,8 +7,8 @@ module Random.List exposing (choose, shuffle)
 
 -}
 
-import Random exposing (Generator, andThen)
-import Random.Extra exposing (constant)
+import Random.Pcg exposing (Generator, andThen)
+import Random.Pcg.Extra exposing (constant)
 
 
 {-| Get nth element of the list. If the list is empty, the selected element
@@ -41,9 +41,9 @@ choose list =
                 List.drop (i + 1) list
 
             gen =
-                Random.int 0 lastIndex
+                Random.Pcg.int 0 lastIndex
         in
-            Random.map
+            Random.Pcg.map
                 (\index ->
                     ( get index list, List.append (front index) (back index) )
                 )
@@ -72,4 +72,4 @@ shuffle list =
                                     helper ( val :: done, shorter )
                         )
         in
-            Random.map Tuple.first (helper ( [], list ))
+            Random.Pcg.map Tuple.first (helper ( [], list ))

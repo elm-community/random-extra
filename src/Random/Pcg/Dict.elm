@@ -1,4 +1,4 @@
-module Random.Dict exposing (..)
+module Random.Pcg.Dict exposing (..)
 
 {-| Extra randomized functions on dicts.
 
@@ -8,7 +8,7 @@ module Random.Dict exposing (..)
 -}
 
 import Dict exposing (Dict, fromList)
-import Random exposing (Generator, map, pair, list, int, andThen)
+import Random.Pcg exposing (Generator, map, pair, list, int, andThen)
 
 
 {-| Generate a random dict with given length, key generator, and value generator
