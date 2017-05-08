@@ -1,27 +1,28 @@
 {
     "version": "2.0.0",
-    "summary": "Extra functions for the core Random library",
-    "repository": "https://github.com/elm-community/random-extra.git",
+    "summary": "Community's Random.Pcg extras with pcg support",
+    "repository": "https://github.com/kress/random-pcg-extra.git",
     "license": "MIT",
     "source-directories": [
         "src"
     ],
     "exposed-modules": [
-        "Random.Array",
-        "Random.Char",
-        "Random.Color",
-        "Random.Date",
-        "Random.Dict",
-        "Random.Extra",
-        "Random.Float",
-        "Random.Int",
-        "Random.List",
-        "Random.Order",
-        "Random.Set",
-        "Random.String"
+        "Random.Pcg.Array",
+        "Random.Pcg.Char",
+        "Random.Pcg.Color",
+        "Random.Pcg.Date",
+        "Random.Pcg.Dict",
+        "Random.Pcg.Extra",
+        "Random.Pcg.Float",
+        "Random.Pcg.Int",
+        "Random.Pcg.List",
+        "Random.Pcg.Order",
+        "Random.Pcg.Set",
+        "Random.Pcg.String"
     ],
     "dependencies": {
-        "elm-lang/core": "5.0.0 <= v < 6.0.0"
+        "elm-lang/core": "5.0.0 <= v < 6.0.0",
+        "mgold/elm-random-pcg": "5.0.0 <= v < 6.0.0"
     },
     "elm-version": "0.18.0 <= v < 0.19.0"
 }

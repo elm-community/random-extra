@@ -1,4 +1,4 @@
-module Random.Array exposing (..)
+module Random.Pcg.Array exposing (..)
 
 {-| Extra randomized functions on arrays.
 
@@ -11,8 +11,8 @@ module Random.Array exposing (..)
 -}
 
 import Array exposing (Array, fromList, empty)
-import Random exposing (Generator, map, list, int, andThen)
-import Random.Extra exposing (constant)
+import Random.Pcg exposing (Generator, map, list, int, andThen)
+import Random.Pcg.Extra exposing (constant)
 
 
 {-| Generate a random array of given size given a random generator
@@ -39,9 +39,9 @@ sample : Array a -> Generator (Maybe a)
 sample arr =
     let
         gen =
-            Random.int 0 (Array.length arr - 1)
+            Random.Pcg.int 0 (Array.length arr - 1)
     in
-        Random.map (\index -> Array.get index arr) gen
+        Random.Pcg.map (\index -> Array.get index arr) gen
 
 
 {-| Sample without replacement: produce a randomly selected element of the
@@ -70,9 +70,9 @@ choose arr =
                     Array.slice (i + 1) (lastIndex + 1) arr
 
             gen =
-                Random.int 0 lastIndex
+                Random.Pcg.int 0 lastIndex
         in
-            Random.map
+            Random.Pcg.map
                 (\index ->
                     ( Array.get index arr, Array.append (front index) (back index) )
                 )
@@ -101,4 +101,4 @@ shuffle arr =
                                     helper ( val :: done, shorter )
                         )
         in
-            Random.map (Tuple.first >> Array.fromList) (helper ( [], arr ))
+            Random.Pcg.map (Tuple.first >> Array.fromList) (helper ( [], arr ))

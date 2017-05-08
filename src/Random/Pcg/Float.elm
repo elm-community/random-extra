@@ -1,4 +1,4 @@
-module Random.Float exposing (..)
+module Random.Pcg.Float exposing (..)
 
 {-| Extra randomized functions on floats.
 
@@ -10,7 +10,7 @@ module Random.Float exposing (..)
 
 -}
 
-import Random exposing (Generator, map, float, maxInt, minInt)
+import Random.Pcg exposing (Generator, map, float, maxInt, minInt)
 
 
 {-| A generator that generates any float
@@ -61,7 +61,7 @@ a uniform distribution)
 -}
 standardNormal : Generator Float
 standardNormal =
-    Random.map2
+    Random.Pcg.map2
         (\u theta -> sqrt (-2 * logBase e (1 - max 0 u)) * cos theta)
         (float 0 1)
         (float 0 (2 * pi))

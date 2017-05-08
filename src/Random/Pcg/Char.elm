@@ -1,4 +1,4 @@
-module Random.Char exposing (..)
+module Random.Pcg.Char exposing (..)
 
 {-| Extra randomized functions on characters.
 
@@ -11,8 +11,8 @@ module Random.Char exposing (..)
 -}
 
 import Char exposing (fromCode)
-import Random exposing (Generator, map, int)
-import Random.Extra exposing (choices)
+import Random.Pcg exposing (Generator, map, int)
+import Random.Pcg.Extra exposing (choices)
 
 
 {-| Generate a random character within a certain keyCode range

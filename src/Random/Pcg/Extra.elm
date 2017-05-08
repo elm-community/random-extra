@@ -1,7 +1,7 @@
-module Random.Extra exposing (..)
+module Random.Pcg.Extra exposing (..)
 
 {-| This module provides many common and general-purpose helper functions for
-core's Random library. You can find even more useful functions for a particular
+core's Random.Pcg library. You can find even more useful functions for a particular
 type in the other modules.
 
 # Constant Generators
@@ -27,7 +27,7 @@ random arguments to drive more randomness.
 @docs andThen2, andThen3, andThen4, andThen5, andThen6
 -}
 
-import Random exposing (Generator, step, list, int, float, bool, map, andThen)
+import Random.Pcg exposing (Generator, step, list, int, float, bool, map, andThen)
 
 
 {-| Create a generator that always produces the value provided. This is useful
@@ -36,14 +36,14 @@ case. It's also useful for the base case of recursive generators.
 -}
 constant : a -> Generator a
 constant value =
-    Random.map (\_ -> value) Random.bool
+    Random.Pcg.map (\_ -> value) Random.Pcg.bool
 
 
 {-| Map a function of six arguments over six generators.
 -}
 map6 : (a -> b -> c -> d -> e -> f -> g) -> Generator a -> Generator b -> Generator c -> Generator d -> Generator e -> Generator f -> Generator g
 map6 f generatorA generatorB generatorC generatorD generatorE generatorF =
-    Random.map5 f generatorA generatorB generatorC generatorD generatorE |> andMap generatorF
+    Random.Pcg.map5 f generatorA generatorB generatorC generatorD generatorE |> andMap generatorF
 
 
 {-| Map over any number of generators.
@@ -59,7 +59,7 @@ map6 f generatorA generatorB generatorC generatorD generatorE generatorF =
 -}
 andMap : Generator a -> Generator (a -> b) -> Generator b
 andMap =
-    Random.map2 (|>)
+    Random.Pcg.map2 (|>)
 
 
 {-| Filter a generator so that all generated values satisfy the given predicate.
@@ -159,7 +159,7 @@ frequency pairs =
                         pick rest (n - k)
 
                 _ ->
-                    Debug.crash "Empty list passed to Random.Extra.frequency!"
+                    Debug.crash "Empty list passed to Random.Pcg.Extra.frequency!"
     in
         float 0 total |> andThen (pick pairs)
 
@@ -173,7 +173,7 @@ combine generators =
             constant []
 
         g :: gs ->
-            Random.map2 (::) g (combine gs)
+            Random.Pcg.map2 (::) g (combine gs)
 
 
 {-| Given a list, choose an element uniformly at random. `Nothing` is only
