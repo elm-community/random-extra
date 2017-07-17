@@ -48,9 +48,11 @@ map6 f generatorA generatorB generatorC generatorD generatorE generatorF =
 
 {-| Map over any number of generators.
 
+    type alias Person = -- some large record
+    
     randomPerson : Generator Person
     randomPerson =
-      map person genFirstName
+      map Person genFirstName
         |> andMap genLastName
         |> andMap genBirthday
         |> andMap genPhoneNumber
