@@ -1,4 +1,4 @@
-module Random.String exposing (..)
+module Random.String exposing (rangeLengthString, string)
 
 {-| Extra randomized functions on strings.
 

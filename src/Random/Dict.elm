@@ -1,4 +1,4 @@
-module Random.Dict exposing (..)
+module Random.Dict exposing (dict, rangeLengthDict)
 
 {-| Extra randomized functions on dicts.
 

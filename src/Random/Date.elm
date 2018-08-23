@@ -1,4 +1,4 @@
-module Random.Date exposing (..)
+module Random.Date exposing (month, weekday)
 
 {-| Extra randomized functions on dates (see `elm/time`).
 
@@ -7,7 +7,7 @@ We only provide generators for days and months. Other generators are trivial for
 
 # Generators
 
-@docs day, month
+@docs weekday, month
 
 -}
 

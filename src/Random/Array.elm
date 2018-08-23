@@ -1,4 +1,4 @@
-module Random.Array exposing (..)
+module Random.Array exposing (array, choose, rangeLengthArray, sample, shuffle)
 
 {-| Extra randomized functions on arrays.
 

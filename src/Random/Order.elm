@@ -1,4 +1,4 @@
-module Random.Order exposing (..)
+module Random.Order exposing (order)
 
 {-| An extra random generator for the `Order` type.
 
