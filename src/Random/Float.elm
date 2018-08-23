@@ -1,16 +1,29 @@
-module Random.Float exposing (..)
+module Random.Float
+    exposing
+        ( anyFloat
+        , floatGreaterThan
+        , floatLessThan
+        , negativeFloat
+        , normal
+        , positiveFloat
+        , standardNormal
+        )
 
 {-| Extra randomized functions on floats.
 
+
 # Arithmetic Generators
+
 @docs anyFloat, positiveFloat, negativeFloat, floatGreaterThan, floatLessThan
 
+
 # Gaussian Generators
+
 @docs normal, standardNormal
 
 -}
 
-import Random exposing (Generator, map, float, maxInt, minInt)
+import Random exposing (Generator, float, map, maxInt, minInt)
 
 
 {-| A generator that generates any float

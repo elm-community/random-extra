@@ -2,17 +2,18 @@ module Random.List exposing (choose, shuffle)
 
 {-| Extra randomized functions on lists.
 
+
 # Work with a List
+
 @docs choose, shuffle
 
 -}
 
-import Random exposing (Generator, andThen)
-import Random.Extra exposing (constant)
+import Random exposing (Generator, andThen, constant)
 
 
 {-| Get nth element of the list. If the list is empty, the selected element
-   will be `Nothing`.
+will be `Nothing`.
 -}
 get : Int -> List a -> Maybe a
 get index list =
@@ -29,6 +30,7 @@ choose : List a -> Generator ( Maybe a, List a )
 choose list =
     if List.isEmpty list then
         constant ( Nothing, list )
+
     else
         let
             lastIndex =
@@ -43,11 +45,11 @@ choose list =
             gen =
                 Random.int 0 lastIndex
         in
-            Random.map
-                (\index ->
-                    ( get index list, List.append (front index) (back index) )
-                )
-                gen
+        Random.map
+            (\index ->
+                ( get index list, List.append (front index) (back index) )
+            )
+            gen
 
 
 {-| Shuffle the list using the Fisher-Yates algorithm. Takes O(_n_ log _n_)
@@ -57,6 +59,7 @@ shuffle : List a -> Generator (List a)
 shuffle list =
     if List.isEmpty list then
         constant list
+
     else
         let
             helper : ( List a, List a ) -> Generator ( List a, List a )
@@ -72,4 +75,4 @@ shuffle list =
                                     helper ( val :: done, shorter )
                         )
         in
-            Random.map Tuple.first (helper ( [], list ))
+        Random.map Tuple.first (helper ( [], list ))

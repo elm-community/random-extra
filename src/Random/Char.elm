@@ -1,23 +1,258 @@
-module Random.Char exposing (..)
+module Random.Char
+    exposing
+        ( aegeanNumber
+        , alchemicalSymbol
+        , alphabeticPresentationForm
+        , ancientGreekMusicalNotationSymbol
+        , ancientGreekNumber
+        , ancientSymbol
+        , arabic
+        , arabicExtendedA
+        , arabicMathematicalAlphabeticSymbol
+        , arabicPresentationFormA
+        , arabicPresentationFormB
+        , arabicSupplement
+        , armenian
+        , arrow
+        , ascii
+        , avestan
+        , balinese
+        , bamum
+        , bamumSupplement
+        , basicLatin
+        , batak
+        , bengali
+        , blockElement
+        , bopomofo
+        , bopomofoExtended
+        , boxDrawing
+        , brahmi
+        , braillePattern
+        , buginese
+        , buhid
+        , byzantineMusicalSymbol
+        , carian
+        , chakma
+        , cham
+        , char
+        , cherokee
+        , cjkCompatibility
+        , cjkCompatibilityForm
+        , cjkCompatibilityIdeograph
+        , cjkCompatibilityIdeographSupplement
+        , cjkRadicalSupplement
+        , cjkStroke
+        , cjkSymbolOrPunctuation
+        , cjkUnifiedIdeograph
+        , cjkUnifiedIdeographExtensionA
+        , cjkUnifiedIdeographExtensionB
+        , cjkUnifiedIdeographExtensionC
+        , cjkUnifiedIdeographExtensionD
+        , combiningDiacriticalMarks
+        , combiningDiacriticalMarksForSymbols
+        , combiningDiacriticalMarksSupplement
+        , combiningHalfMark
+        , commonIndicNumberForm
+        , controlPicture
+        , coptic
+        , countingRodNumeral
+        , cuneiform
+        , cuneiformNumberOrPunctuation
+        , currencySymbol
+        , cypriotSyllable
+        , cyrillic
+        , cyrillicExtendedA
+        , cyrillicExtendedB
+        , cyrillicSupplement
+        , deseret
+        , devanagari
+        , devanagariExtended
+        , dingbat
+        , dominoTile
+        , egyptianHieroglyph
+        , emoticon
+        , enclosedAlphanumeric
+        , enclosedAlphanumericSupplement
+        , enclosedCJKLetterOrMonth
+        , enclosedIdeographicSupplement
+        , english
+        , ethiopic
+        , ethiopicExtended
+        , ethiopicExtendedA
+        , ethiopicSupplement
+        , generalPunctuation
+        , geometricShape
+        , georgian
+        , georgianSupplement
+        , glagolitic
+        , gothic
+        , greekAndCoptic
+        , greekExtended
+        , gujarati
+        , gurmukhi
+        , halfwidthOrFullwidthForm
+        , hangulCompatibilityJamo
+        , hangulJamo
+        , hangulJamoExtendedA
+        , hangulJamoExtendedB
+        , hangulSyllable
+        , hanunoo
+        , hebrew
+        , highPrivateUseSurrogate
+        , highSurrogate
+        , hiragana
+        , ideographicDescription
+        , imperialAramaic
+        , inscriptionalPahlavi
+        , inscriptionalParthian
+        , ipaExtensions
+        , javanese
+        , kaithi
+        , kanaSupplement
+        , kanbun
+        , kangxiRadical
+        , kannada
+        , katakana
+        , katakanaPhoneticExtension
+        , kayahLi
+        , kharoshthi
+        , khmer
+        , khmerSymbol
+        , lao
+        , latin
+        , latin1Supplement
+        , latinExtendedA
+        , latinExtendedAdditional
+        , latinExtendedB
+        , latinExtendedC
+        , latinExtendedD
+        , lepcha
+        , letterlikeSymbol
+        , limbu
+        , linearBIdeogram
+        , linearBSyllable
+        , lisu
+        , lowSurrogate
+        , lowerCaseLatin
+        , lycian
+        , lydian
+        , mahjongTile
+        , malayalam
+        , mandaic
+        , mathematicalAlphanumericSymbol
+        , mathematicalOperator
+        , meeteiMayek
+        , meeteiMayekExtension
+        , meroiticCursive
+        , meroiticHieroglyph
+        , miao
+        , miscellaneousMathematicalSymbolA
+        , miscellaneousMathematicalSymbolB
+        , miscellaneousSymbol
+        , miscellaneousSymbolOrArrow
+        , miscellaneousSymbolOrPictograph
+        , miscellaneousTechnical
+        , modifierToneLetter
+        , mongolian
+        , musicalSymbol
+        , myanmar
+        , myanmarExtendedA
+        , newTaiLue
+        , nko
+        , numberForm
+        , ogham
+        , olChiki
+        , oldItalic
+        , oldPersian
+        , oldSouthArabian
+        , oldTurkic
+        , opticalCharacterRecognition
+        , oriya
+        , osmanya
+        , phagsPa
+        , phaistosDisc
+        , phoenician
+        , phoneticExtensions
+        , phoneticExtensionsSupplement
+        , playingCard
+        , privateUseArea
+        , rejang
+        , rumiNumericalSymbol
+        , runic
+        , samaritan
+        , saurashtra
+        , sharada
+        , shavian
+        , sinhala
+        , smallFormVariant
+        , soraSompeng
+        , spacingModifier
+        , special
+        , sundanese
+        , sundaneseSupplement
+        , superscriptOrSubscript
+        , supplementalArrowA
+        , supplementalArrowB
+        , supplementalMathematicalOperator
+        , supplementalPunctuation
+        , supplementaryPrivateUseAreaA
+        , supplementaryPrivateUseAreaB
+        , sylotiNagri
+        , syriac
+        , tag
+        , tagalog
+        , tagbanwa
+        , taiLe
+        , taiTham
+        , taiViet
+        , taiXuanJingSymbol
+        , takri
+        , tamil
+        , telugu
+        , thaana
+        , thai
+        , tibetan
+        , tifinagh
+        , transportOrMapSymbol
+        , ugaritic
+        , unicode
+        , unifiedCanadianAboriginalSyllabic
+        , unifiedCanadianAboriginalSyllabicExtended
+        , upperCaseLatin
+        , vai
+        , variationSelector
+        , variationSelectorSupplement
+        , vedicExtensions
+        , verticalForm
+        , yiRadical
+        , yiSyllable
+        , yijingHexagramSymbol
+        )
 
 {-| Extra randomized functions on characters.
 
+
 # Basic Generators
+
 @docs char, lowerCaseLatin, upperCaseLatin, latin, english, ascii, unicode
 
+
 # Unicode Generators (UTF-8)
+
 @docs basicLatin, latin1Supplement, latinExtendedA, latinExtendedB, ipaExtensions, spacingModifier, combiningDiacriticalMarks, greekAndCoptic, cyrillic, cyrillicSupplement, armenian, hebrew, arabic, syriac, arabicSupplement, thaana, nko, samaritan, mandaic, arabicExtendedA, devanagari, bengali, gurmukhi, gujarati, oriya, tamil, telugu, kannada, malayalam, sinhala, thai, lao, tibetan, myanmar, georgian, hangulJamo, ethiopic, ethiopicSupplement, cherokee, unifiedCanadianAboriginalSyllabic, ogham, runic, tagalog, hanunoo, buhid, tagbanwa, khmer, mongolian, unifiedCanadianAboriginalSyllabicExtended, limbu, taiLe, newTaiLue, khmerSymbol, buginese, taiTham, balinese, sundanese, batak, lepcha, olChiki, sundaneseSupplement, vedicExtensions, phoneticExtensions, phoneticExtensionsSupplement, combiningDiacriticalMarksSupplement, latinExtendedAdditional, greekExtended, generalPunctuation, superscriptOrSubscript, currencySymbol, combiningDiacriticalMarksForSymbols, letterlikeSymbol, numberForm, arrow, mathematicalOperator, miscellaneousTechnical, controlPicture, opticalCharacterRecognition, enclosedAlphanumeric, boxDrawing, blockElement, geometricShape, miscellaneousSymbol, dingbat, miscellaneousMathematicalSymbolA, supplementalArrowA, braillePattern, supplementalArrowB, miscellaneousMathematicalSymbolB, supplementalMathematicalOperator, miscellaneousSymbolOrArrow, glagolitic, latinExtendedC, coptic, georgianSupplement, tifinagh, ethiopicExtended, cyrillicExtendedA, supplementalPunctuation, cjkRadicalSupplement, kangxiRadical, ideographicDescription, cjkSymbolOrPunctuation, hiragana, katakana, bopomofo, hangulCompatibilityJamo, kanbun, bopomofoExtended, cjkStroke, katakanaPhoneticExtension, enclosedCJKLetterOrMonth, cjkCompatibility, cjkUnifiedIdeographExtensionA, yijingHexagramSymbol, cjkUnifiedIdeograph, yiSyllable, yiRadical, lisu, vai, cyrillicExtendedB, bamum, modifierToneLetter, latinExtendedD, sylotiNagri, commonIndicNumberForm, phagsPa, saurashtra, devanagariExtended, kayahLi, rejang, hangulJamoExtendedA, javanese, cham, myanmarExtendedA, taiViet, meeteiMayekExtension, ethiopicExtendedA, meeteiMayek, hangulSyllable, hangulJamoExtendedB, highSurrogate, highPrivateUseSurrogate, lowSurrogate, privateUseArea, cjkCompatibilityIdeograph, alphabeticPresentationForm, arabicPresentationFormA, variationSelector, verticalForm, combiningHalfMark, cjkCompatibilityForm, smallFormVariant, arabicPresentationFormB, halfwidthOrFullwidthForm, special, linearBSyllable, linearBIdeogram, aegeanNumber, ancientGreekNumber, ancientSymbol, phaistosDisc, lycian, carian, oldItalic, gothic, ugaritic, oldPersian, deseret, shavian, osmanya, cypriotSyllable, imperialAramaic, phoenician, lydian, meroiticHieroglyph, meroiticCursive, kharoshthi, oldSouthArabian, avestan, inscriptionalParthian, inscriptionalPahlavi, oldTurkic, rumiNumericalSymbol, brahmi, kaithi, soraSompeng, chakma, sharada, takri, cuneiform, cuneiformNumberOrPunctuation, egyptianHieroglyph, bamumSupplement, miao, kanaSupplement, byzantineMusicalSymbol, musicalSymbol, ancientGreekMusicalNotationSymbol, taiXuanJingSymbol, countingRodNumeral, mathematicalAlphanumericSymbol, arabicMathematicalAlphabeticSymbol, mahjongTile, dominoTile, playingCard, enclosedAlphanumericSupplement, enclosedIdeographicSupplement, miscellaneousSymbolOrPictograph, emoticon, transportOrMapSymbol, alchemicalSymbol, cjkUnifiedIdeographExtensionB, cjkUnifiedIdeographExtensionC, cjkUnifiedIdeographExtensionD, cjkCompatibilityIdeographSupplement, tag, variationSelectorSupplement, supplementaryPrivateUseAreaA, supplementaryPrivateUseAreaB
 
 -}
 
 import Char exposing (fromCode)
-import Random exposing (Generator, map, int)
+import Random exposing (Generator, int, map)
 import Random.Extra exposing (choices)
 
 
 {-| Generate a random character within a certain keyCode range
 
-    lowerCaseLetter = char 65 90
+    lowerCaseLetter =
+        char 65 90
+
 -}
 char : Int -> Int -> Generator Char
 char start end =
@@ -42,7 +277,7 @@ lowerCaseLatin =
 -}
 latin : Generator Char
 latin =
-    choices [ lowerCaseLatin, upperCaseLatin ]
+    choices lowerCaseLatin [ upperCaseLatin ]
 
 
 {-| Generate a random English Letter (alias for `latin`)
