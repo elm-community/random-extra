@@ -2,18 +2,22 @@ module Random.String exposing (..)
 
 {-| Extra randomized functions on strings.
 
+
 # Create a String
+
 @docs string, rangeLengthString
 
 -}
 
+import Random exposing (Generator, andThen, int, list, map, map2)
 import String exposing (fromList)
-import Random exposing (Generator, map, map2, list, int, andThen)
 
 
 {-| Generate a random string of a given length with a given character generator
 
-    fiveLetterEnglishWord = string 5 Random.Char.english
+    fiveLetterEnglishWord =
+        string 5 Random.Char.english
+
 -}
 string : Int -> Generator Char -> Generator String
 string stringLength charGenerator =

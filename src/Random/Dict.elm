@@ -2,22 +2,26 @@ module Random.Dict exposing (..)
 
 {-| Extra randomized functions on dicts.
 
+
 # Generators
+
 @docs dict, rangeLengthDict
 
 -}
 
 import Dict exposing (Dict, fromList)
-import Random exposing (Generator, map, pair, list, int, andThen)
+import Random exposing (Generator, andThen, int, list, map, pair)
 
 
 {-| Generate a random dict with given length, key generator, and value generator
 
-    randomLength10StringIntDict = dict 10 (englishWord 10) (int 0 100)
+    randomLength10StringIntDict =
+        dict 10 (englishWord 10) (int 0 100)
+
 -}
 dict : Int -> Generator comparable -> Generator value -> Generator (Dict comparable value)
 dict dictLength keyGenerator valueGenerator =
-    map (fromList) (list dictLength (pair keyGenerator valueGenerator))
+    map fromList (list dictLength (pair keyGenerator valueGenerator))
 
 
 {-| Generate a random dict of random length given a minimum length and

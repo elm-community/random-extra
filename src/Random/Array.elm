@@ -2,22 +2,28 @@ module Random.Array exposing (..)
 
 {-| Extra randomized functions on arrays.
 
+
 # Create an Array
+
 @docs array, rangeLengthArray
 
+
 # Work with an Array
+
 @docs sample, choose, shuffle
 
 -}
 
-import Array exposing (Array, fromList, empty)
-import Random exposing (Generator, map, list, int, andThen)
+import Array exposing (Array, empty, fromList)
+import Random exposing (Generator, andThen, int, list, map)
 import Random.Extra exposing (constant)
 
 
 {-| Generate a random array of given size given a random generator
 
-    randomLength5IntArray = array 5 (int 0 100)
+    randomLength5IntArray =
+        array 5 (int 0 100)
+
 -}
 array : Int -> Generator a -> Generator (Array a)
 array arrayLength generator =
@@ -41,7 +47,7 @@ sample arr =
         gen =
             Random.int 0 (Array.length arr - 1)
     in
-        Random.map (\index -> Array.get index arr) gen
+    Random.map (\index -> Array.get index arr) gen
 
 
 {-| Sample without replacement: produce a randomly selected element of the
@@ -52,6 +58,7 @@ choose : Array a -> Generator ( Maybe a, Array a )
 choose arr =
     if Array.isEmpty arr then
         constant ( Nothing, arr )
+
     else
         let
             lastIndex =
@@ -66,17 +73,18 @@ choose arr =
                     -- workaround for #1
                 then
                     Array.empty
+
                 else
                     Array.slice (i + 1) (lastIndex + 1) arr
 
             gen =
                 Random.int 0 lastIndex
         in
-            Random.map
-                (\index ->
-                    ( Array.get index arr, Array.append (front index) (back index) )
-                )
-                gen
+        Random.map
+            (\index ->
+                ( Array.get index arr, Array.append (front index) (back index) )
+            )
+            gen
 
 
 {-| Shuffle the array using the Fisher-Yates algorithm. Takes O(_n_ log _n_)
@@ -86,6 +94,7 @@ shuffle : Array a -> Generator (Array a)
 shuffle arr =
     if Array.isEmpty arr then
         constant arr
+
     else
         let
             helper : ( List a, Array a ) -> Generator ( List a, Array a )
@@ -101,4 +110,4 @@ shuffle arr =
                                     helper ( val :: done, shorter )
                         )
         in
-            Random.map (Tuple.first >> Array.fromList) (helper ( [], arr ))
+        Random.map (Tuple.first >> Array.fromList) (helper ( [], arr ))

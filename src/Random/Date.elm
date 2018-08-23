@@ -2,15 +2,17 @@ module Random.Date exposing (..)
 
 {-| Extra randomized functions on dates.
 
+
 # Generators
+
 @docs date, day, month, year, hour, hour24, hour12, minute, second
 
 -}
 
-import Date exposing (Day(..), Month(..), fromTime, toTime, Date)
-import Time exposing (Time)
-import Random exposing (Generator, map, int, float)
+import Date exposing (Date, Day(..), Month(..), fromTime, toTime)
+import Random exposing (Generator, float, int, map)
 import Random.Extra exposing (sample)
+import Time exposing (Time)
 
 
 {-| Generate a random day of the week.

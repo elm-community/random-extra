@@ -2,16 +2,20 @@ module Random.Color exposing (..)
 
 {-| Extra randomized functions on colors.
 
+
 # Random Colors by Components
+
 @docs rgb, rgba, hsl, hsla
 
+
 # Random Colors by Shade
+
 @docs greyscale, grayscale, red, green, blue
 
 -}
 
 import Color exposing (Color)
-import Random exposing (Generator, map, map3, map4, int, float)
+import Random exposing (Generator, float, int, map, map3, map4)
 
 
 {-| Generate a random non-transparent color by random RGB values.

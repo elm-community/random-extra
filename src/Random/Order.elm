@@ -3,6 +3,7 @@ module Random.Order exposing (..)
 {-| An extra random generator for the `Order` type.
 
 @docs order
+
 -}
 
 import Random exposing (Generator, map)
