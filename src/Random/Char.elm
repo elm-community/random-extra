@@ -48,7 +48,7 @@ lowerCaseLatin =
 -}
 latin : Generator Char
 latin =
-    choices [ lowerCaseLatin, upperCaseLatin ]
+    choices lowerCaseLatin [ upperCaseLatin ]
 
 
 {-| Generate a random English Letter (alias for `latin`)

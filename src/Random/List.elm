@@ -9,8 +9,7 @@ module Random.List exposing (choose, shuffle)
 
 -}
 
-import Random exposing (Generator, andThen)
-import Random.Extra exposing (constant)
+import Random exposing (Generator, andThen, constant)
 
 
 {-| Get nth element of the list. If the list is empty, the selected element

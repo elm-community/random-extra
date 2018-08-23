@@ -5,9 +5,9 @@ core's Random library. You can find even more useful functions for a particular
 type in the other modules.
 
 
-# Constant Generators
+# Values
 
-@docs constant
+@docs bool
 
 
 # Maps
@@ -42,16 +42,14 @@ random arguments to drive more randomness.
 
 -}
 
-import Random exposing (Generator, andThen, bool, float, int, list, map, step)
+import Random exposing (Generator, andThen, constant, float, int, list, map, step)
 
 
-{-| Create a generator that always produces the value provided. This is useful
-when creating complicated chained generators and you need to handle a simple
-case. It's also useful for the base case of recursive generators.
+{-| An unbiased generator of `Bool` values.
 -}
-constant : a -> Generator a
-constant value =
-    Random.map (\_ -> value) Random.bool
+bool : Generator Bool
+bool =
+    Random.uniform True [ False ]
 
 
 {-| Map a function of six arguments over six generators.
@@ -157,31 +155,29 @@ choice x y =
 {-| Create a generator that chooses a generator from a list of generators
 with equal probability.
 
-**Warning:** Do not pass an empty list or your program will crash! In practice
-this is usually not a problem since you pass a list literal.
+We guarantee a nonempty list is passed by splitting it into two arguments.
 
 -}
-choices : List (Generator a) -> Generator a
-choices gens =
-    frequency <| List.map (\g -> ( 1, g )) gens
+choices : Generator a -> List (Generator a) -> Generator a
+choices hd gens =
+    frequency ( 1, hd ) <| List.map (\g -> ( 1, g )) gens
 
 
 {-| Create a generator that chooses a generator from a list of generators
 based on the provided weight. The likelihood of a given generator being
 chosen is its weight divided by the total weight (which doesn't have to equal 1).
 
-**Warning:** Do not pass an empty list or your program will crash! In practice
-this is usually not a problem since you pass a list literal.
+We guarantee a nonempty list is passed by splitting it into two arguments.
 
 -}
-frequency : List ( Float, Generator a ) -> Generator a
-frequency pairs =
+frequency : ( Float, Generator a ) -> List ( Float, Generator a ) -> Generator a
+frequency head pairs =
     let
         total =
-            List.sum <| List.map (abs << Tuple.first) pairs
+            List.sum <| List.map (abs << Tuple.first) (head :: pairs)
 
-        pick choices n =
-            case choices of
+        pick someChoices n =
+            case someChoices of
                 ( k, g ) :: rest ->
                     if n <= k then
                         g
@@ -189,10 +185,11 @@ frequency pairs =
                     else
                         pick rest (n - k)
 
+                -- this should never happen
                 _ ->
-                    Debug.crash "Empty list passed to Random.Extra.frequency!"
+                    Tuple.second head
     in
-    float 0 total |> andThen (pick pairs)
+    float 0 total |> andThen (pick (head :: pairs))
 
 
 {-| Turn a list of generators into a generator of lists.

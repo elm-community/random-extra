@@ -15,8 +15,7 @@ module Random.Array exposing (..)
 -}
 
 import Array exposing (Array, empty, fromList)
-import Random exposing (Generator, andThen, int, list, map)
-import Random.Extra exposing (constant)
+import Random exposing (Generator, andThen, constant, int, list, map)
 
 
 {-| Generate a random array of given size given a random generator

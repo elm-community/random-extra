@@ -19,24 +19,24 @@ module Random.Set exposing (..)
 
 -}
 
-import Random exposing (Generator, andThen, map)
-import Random.Extra exposing (constant, filter)
+import Random exposing (Generator, andThen, constant, map)
+import Random.Extra exposing (filter)
 import Set exposing (Set)
 
 
 {-| Filter a generator of all values not in a given set.
 -}
 notInSet : Set comparable -> Generator comparable -> Generator comparable
-notInSet set generator =
-    filter (not << flip Set.member set) generator
+notInSet aSet generator =
+    filter (\element -> not <| Set.member element aSet) generator
 
 
 {-| Select a value from a set uniformly at random, or `Nothing` for an empty set.
 Analogous to `Random.Extra.sample` but with sets.
 -}
 sample : Set comparable -> Generator (Maybe comparable)
-sample set =
-    Random.Extra.sample (Set.toList set)
+sample aSet =
+    Random.Extra.sample (Set.toList aSet)
 
 
 {-| Generate a set of at most the given size from a generator.
@@ -49,9 +49,9 @@ guaranteed, that generated sets will be as big as the smaller of these two limit
 set : Int -> Generator comparable -> Generator (Set comparable)
 set maxLength generator =
     let
-        helper set remaining strikes =
+        helper aSet remaining strikes =
             if remaining <= 0 || strikes == 10 then
-                constant set
+                constant aSet
 
             else
                 generator
@@ -59,10 +59,10 @@ set maxLength generator =
                         (\val ->
                             let
                                 newSet =
-                                    Set.insert val set
+                                    Set.insert val aSet
                             in
-                            if Set.size newSet == Set.size set then
-                                helper set remaining (strikes + 1)
+                            if Set.size newSet == Set.size aSet then
+                                helper aSet remaining (strikes + 1)
 
                             else
                                 helper newSet (remaining - 1) 0
