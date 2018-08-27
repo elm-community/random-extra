@@ -4,6 +4,16 @@ This library includes lots of extra helper functions for the Random module. It m
 If you want to add one or find a bug, please [open an issue](https://github.com/elm-community/random-extra/issues/new).
 
 ## Changelog
+### 3.0.0
+* Update for Elm 0.19, including switching to `elm/random`.
+* Remove `Color` module.
+* Rename `Random.Date.day` to `Random.Date.weekday`.
+* Remove many trivial functions in `Random.Date`.
+* Add `Random.Extra.bool`.
+* Remove `Random.Extra.constant`; it's present in the official library.
+* Change the signatures of `Random.Extra.choices` and `Random.Extra.frequency` to require an element and a list, avoid the issue of an empty list.
+
+
 ### 2.0.0
 * Update dependencies for Elm 0.18.
 * Remove `flatMap` as core's `andThen` is identical.
