@@ -2,7 +2,7 @@ module Random.Extra exposing
     ( bool
     , map6, andMap
     , oneIn, maybe, result, choice
-    , choices, frequency, sample, combine, rangeLengthList
+    , sequence, traverse, choices, frequency, sample, combine, rangeLengthList
     , filter
     , andThen2, andThen3, andThen4, andThen5, andThen6
     )
@@ -31,7 +31,7 @@ For `map` and `mapN` up through N=5, use the core library.
 
 # Working with Lists
 
-@docs choices, frequency, sample, combine, rangeLengthList
+@docs sequence, traverse, choices, frequency, sample, combine, rangeLengthList
 
 
 # Filtered Generators
@@ -157,6 +157,21 @@ choice x y =
                 y
         )
         bool
+
+
+{-| Start with a list of generators, and turn them into a generator that returns a list.
+-}
+sequence : List (Generator a) -> Generator (List a)
+sequence =
+    List.foldr (Random.map2 (::)) (Random.constant [])
+
+
+{-| Apply a function that returns a generator to each element of a list,
+and turn it into a generator that returns a list.
+-}
+traverse : (a -> Generator b) -> List a -> Generator (List b)
+traverse f =
+    sequence << List.map f
 
 
 {-| Create a generator that chooses a generator from a list of generators
