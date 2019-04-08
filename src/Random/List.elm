@@ -70,7 +70,7 @@ shuffle list =
             Array.length values
     in
     Random.map
-        (Utils.shuffleByIndexes values)
+        (Utils.selectUniqByIndexes values)
         -- It generates the sequence of random indexes
         -- The indexes could and will (for sure) duplicate each other
         -- But UnionFind will help us to convert them into uniq,
