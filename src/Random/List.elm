@@ -9,7 +9,9 @@ module Random.List exposing (choose, shuffle)
 
 -}
 
+import Array
 import Random exposing (Generator, andThen, constant)
+import Utils
 
 
 {-| Get nth element of the list. If the list is empty, the selected element
@@ -52,27 +54,25 @@ choose list =
             gen
 
 
-{-| Shuffle the list using the Fisher-Yates algorithm. Takes O(_n_ log _n_)
-time and O(_n_) additional space.
+{-| Shuffle the list using the Union-Find data structure with path compression algorithm.
+Takes O(_n_ log _n_).
 -}
 shuffle : List a -> Generator (List a)
 shuffle list =
-    if List.isEmpty list then
-        constant list
+    let
+        -- Keep values in Array for fast extracting them by index
+        values =
+            Array.fromList list
 
-    else
-        let
-            helper : ( List a, List a ) -> Generator ( List a, List a )
-            helper ( done, remaining ) =
-                choose remaining
-                    |> andThen
-                        (\( m_val, shorter ) ->
-                            case m_val of
-                                Nothing ->
-                                    constant ( done, shorter )
-
-                                Just val ->
-                                    helper ( val :: done, shorter )
-                        )
-        in
-        Random.map Tuple.first (helper ( [], list ))
+        -- Yes, it takes O(1) time for get the Array's length,
+        -- but let's just keep the value here
+        length =
+            Array.length values
+    in
+    Random.map
+        (Utils.shuffleByIndexes values)
+        -- It generates the sequence of random indexes
+        -- The indexes could and will (for sure) duplicate each other
+        -- But UnionFind will help us to convert them into uniq,
+        -- even if all of the indexes will be the same value
+        (Random.list length (Random.int 0 (length - 1)))
