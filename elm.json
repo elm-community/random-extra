@@ -24,5 +24,7 @@
         "elm/time": "1.0.0 <= v < 2.0.0",
         "owanturist/elm-union-find": "1.0.0 <= v < 2.0.0"
     },
-    "test-dependencies": {}
+    "test-dependencies": {
+        "elm-explorations/test": "1.2.1 <= v < 2.0.0"
+    }
 }
