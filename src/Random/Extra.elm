@@ -1,24 +1,11 @@
-module Random.Extra
-    exposing
-        ( andMap
-        , andThen2
-        , andThen3
-        , andThen4
-        , andThen5
-        , andThen6
-        , bool
-        , choice
-        , choices
-        , combine
-        , filter
-        , frequency
-        , map6
-        , maybe
-        , oneIn
-        , rangeLengthList
-        , result
-        , sample
-        )
+module Random.Extra exposing
+    ( bool
+    , map6, andMap
+    , oneIn, maybe, result, choice
+    , choices, frequency, sample, combine, rangeLengthList
+    , filter
+    , andThen2, andThen3, andThen4, andThen5, andThen6
+    )
 
 {-| This module provides many common and general-purpose helper functions for
 core's Random library. You can find even more useful functions for a particular

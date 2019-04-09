@@ -1,4 +1,4 @@
-module Random.Date exposing (month, weekday)
+module Random.Date exposing (weekday, month)
 
 {-| Extra randomized functions on dates (see `elm/time`).
 
