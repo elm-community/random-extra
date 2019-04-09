@@ -1,4 +1,8 @@
-module Random.Set exposing (notInSet, sample, set)
+module Random.Set exposing
+    ( set
+    , sample
+    , notInSet
+    )
 
 {-| Extra randomized functions on sets.
 
