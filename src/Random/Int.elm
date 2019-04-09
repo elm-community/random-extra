@@ -1,4 +1,4 @@
-module Random.Int exposing (anyInt, intGreaterThan, intLessThan, negativeInt, positiveInt)
+module Random.Int exposing (anyInt, positiveInt, negativeInt, intGreaterThan, intLessThan)
 
 {-| Extra randomized functions on ints.
 

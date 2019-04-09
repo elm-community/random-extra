@@ -1,13 +1,7 @@
-module Random.Float
-    exposing
-        ( anyFloat
-        , floatGreaterThan
-        , floatLessThan
-        , negativeFloat
-        , normal
-        , positiveFloat
-        , standardNormal
-        )
+module Random.Float exposing
+    ( anyFloat, positiveFloat, negativeFloat, floatGreaterThan, floatLessThan
+    , normal, standardNormal
+    )
 
 {-| Extra randomized functions on floats.
 
