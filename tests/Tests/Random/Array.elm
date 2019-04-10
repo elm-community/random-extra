@@ -12,7 +12,7 @@ import Test exposing (Test)
 suite : Test
 suite =
     Test.describe "shuffle"
-        [ Test.test "shuffle 10 elements with given seedRoot" <|
+        [ Test.test "shuffle 10 elements with a given seedRoot" <|
             \() ->
                 let
                     initialList =
@@ -26,11 +26,11 @@ suite =
                     |> Expect.equalLists [ 4, 8, 5, 1, 0, 9, 7, 6, 2, 3 ]
 
         --
-        , Test.fuzzWith { runs = 1 } Fuzz.int "test existing all of the 10k elements" <|
-            \seedRoot ->
+        , Test.fuzz (Fuzz.tuple ( Fuzz.int, Fuzz.intRange 0 100 )) "test existing all of the shuffled elements" <|
+            \( seedRoot, listLength ) ->
                 let
                     initialList =
-                        List.range 0 9999
+                        List.range 0 listLength
 
                     ( shuffledArray, _ ) =
                         Random.step (Random.Array.shuffle (Array.fromList initialList)) (Random.initialSeed seedRoot)
@@ -41,11 +41,11 @@ suite =
                     |> Expect.equalLists initialList
 
         --
-        , Test.fuzzWith { runs = 1 } Fuzz.int "test uniq of 10k elements" <|
-            \seedRoot ->
+        , Test.fuzz (Fuzz.tuple ( Fuzz.int, Fuzz.intRange 0 100 )) "test uniq of the shuffled elements" <|
+            \( seedRoot, listLength ) ->
                 let
                     initialList =
-                        List.range 0 9999
+                        List.range 0 listLength
 
                     ( shuffledArray, _ ) =
                         Random.step (Random.Array.shuffle (Array.fromList initialList)) (Random.initialSeed seedRoot)
@@ -55,4 +55,19 @@ suite =
                     |> Set.fromList
                     |> Set.diff (Set.fromList initialList)
                     |> Expect.equalSets Set.empty
+
+        --
+        , Test.fuzzWith { runs = 1 } Fuzz.int "critical 100k length" <|
+            \seedRoot ->
+                let
+                    initialList =
+                        List.range 0 100000
+
+                    ( shuffledArray, _ ) =
+                        Random.step (Random.Array.shuffle (Array.fromList initialList)) (Random.initialSeed seedRoot)
+                in
+                shuffledArray
+                    |> Array.toList
+                    |> List.sort
+                    |> Expect.equalLists initialList
         ]
