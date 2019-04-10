@@ -90,8 +90,8 @@ choose arr =
             gen
 
 
-{-| Shuffle the list using the Union-Find data structure with path compression algorithm.
-Takes O(_n_ log _n_).
+{-| Shuffle the array using the Union-Find data structure with path compression algorithm.
+Takes O(_n_ log _n_) space and time.
 -}
 shuffle : Array a -> Generator (Array a)
 shuffle values =
