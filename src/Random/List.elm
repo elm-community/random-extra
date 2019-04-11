@@ -55,7 +55,7 @@ choose list =
 
 
 {-| Shuffle the list using the Union-Find data structure with path compression algorithm.
-Takes O(_n_ log _n_).
+Takes O(_n_ log _n_) space and time.
 -}
 shuffle : List a -> Generator (List a)
 shuffle list =

@@ -1,9 +1,10 @@
-module Tests.Random.List exposing (suite)
+module Tests.Random.Array exposing (suite)
 
+import Array
 import Expect
 import Fuzz
 import Random
-import Random.List
+import Random.Array
 import Set
 import Test exposing (Test)
 
@@ -17,10 +18,11 @@ suite =
                     initialList =
                         List.range 0 9
 
-                    ( shuffledList, _ ) =
-                        Random.step (Random.List.shuffle initialList) (Random.initialSeed 0)
+                    ( shuffledArray, _ ) =
+                        Random.step (Random.Array.shuffle (Array.fromList initialList)) (Random.initialSeed 0)
                 in
-                shuffledList
+                shuffledArray
+                    |> Array.toList
                     |> Expect.equalLists [ 4, 8, 5, 1, 0, 9, 7, 6, 2, 3 ]
 
         --
@@ -30,10 +32,11 @@ suite =
                     initialList =
                         List.range 0 listLength
 
-                    ( shuffledList, _ ) =
-                        Random.step (Random.List.shuffle initialList) (Random.initialSeed seedRoot)
+                    ( shuffledArray, _ ) =
+                        Random.step (Random.Array.shuffle (Array.fromList initialList)) (Random.initialSeed seedRoot)
                 in
-                shuffledList
+                shuffledArray
+                    |> Array.toList
                     |> List.sort
                     |> Expect.equalLists initialList
 
@@ -44,10 +47,11 @@ suite =
                     initialList =
                         List.range 0 listLength
 
-                    ( shuffledList, _ ) =
-                        Random.step (Random.List.shuffle initialList) (Random.initialSeed seedRoot)
+                    ( shuffledArray, _ ) =
+                        Random.step (Random.Array.shuffle (Array.fromList initialList)) (Random.initialSeed seedRoot)
                 in
-                shuffledList
+                shuffledArray
+                    |> Array.toList
                     |> Set.fromList
                     |> Set.diff (Set.fromList initialList)
                     |> Expect.equalSets Set.empty
@@ -59,10 +63,11 @@ suite =
                     initialList =
                         List.range 0 100000
 
-                    ( shuffledList, _ ) =
-                        Random.step (Random.List.shuffle initialList) (Random.initialSeed seedRoot)
+                    ( shuffledArray, _ ) =
+                        Random.step (Random.Array.shuffle (Array.fromList initialList)) (Random.initialSeed seedRoot)
                 in
-                shuffledList
+                shuffledArray
+                    |> Array.toList
                     |> List.sort
                     |> Expect.equalLists initialList
         ]
