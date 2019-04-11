@@ -3,7 +3,7 @@
     "name": "elm-community/random-extra",
     "summary": "Extra functions for the core Random library",
     "license": "BSD-3-Clause",
-    "version": "3.0.0",
+    "version": "3.1.0",
     "exposed-modules": [
         "Random.Array",
         "Random.Char",

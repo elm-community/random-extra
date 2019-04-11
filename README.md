@@ -4,6 +4,10 @@ This library includes lots of extra helper functions for the Random module. It m
 If you want to add one or find a bug, please [open an issue](https://github.com/elm-community/random-extra/issues/new). If you want to contribute, you can open a PR adding tests.
 
 ## Changelog
+### 3.1.0
+* Add `sequence` and `traverse` functions
+* Improve the performance of `Random.List.shuffle` and `Random.Array.shuffle`, especially on long lists/arrays.
+
 ### 3.0.0
 * Update for Elm 0.19, including switching to `elm/random`.
 * Remove `Color` module.
