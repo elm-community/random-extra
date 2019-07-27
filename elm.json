@@ -1,30 +1,30 @@
 {
-    "type": "package",
-    "name": "elm-community/random-extra",
-    "summary": "Extra functions for the core Random library",
-    "license": "BSD-3-Clause",
-    "version": "3.1.0",
-    "exposed-modules": [
-        "Random.Array",
-        "Random.Char",
-        "Random.Date",
-        "Random.Dict",
-        "Random.Extra",
-        "Random.Float",
-        "Random.Int",
-        "Random.List",
-        "Random.Order",
-        "Random.Set",
-        "Random.String"
-    ],
-    "elm-version": "0.19.0 <= v < 0.20.0",
-    "dependencies": {
-        "elm/core": "1.0.0 <= v < 2.0.0",
-        "elm/random": "1.0.0 <= v < 2.0.0",
-        "elm/time": "1.0.0 <= v < 2.0.0",
-        "owanturist/elm-union-find": "1.0.0 <= v < 2.0.0"
-    },
-    "test-dependencies": {
-        "elm-explorations/test": "1.2.1 <= v < 2.0.0"
-    }
+  "type": "package",
+  "name": "elm-community/random-extra",
+  "summary": "Extra functions for the core Random library",
+  "license": "BSD-3-Clause",
+  "version": "3.1.0",
+  "exposed-modules": [
+    "Random.Array",
+    "Random.Char",
+    "Random.Date",
+    "Random.Dict",
+    "Random.Extra",
+    "Random.Float",
+    "Random.Int",
+    "Random.List",
+    "Random.Order",
+    "Random.Set",
+    "Random.String"
+  ],
+  "elm-version": "0.19.0 <= v < 0.20.0",
+  "dependencies": {
+    "elm/core": "1.0.0 <= v < 2.0.0",
+    "elm/random": "1.0.0 <= v < 2.0.0",
+    "elm/time": "1.0.0 <= v < 2.0.0",
+    "owanturist/elm-union-find": "1.0.0 <= v < 2.0.0"
+  },
+  "test-dependencies": {
+    "elm-explorations/test": "1.2.1 <= v < 2.0.0"
+  }
 }
