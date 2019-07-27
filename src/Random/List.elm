@@ -1,4 +1,7 @@
-module Random.List exposing (choose, shuffle)
+module Random.List exposing
+    ( choose, shuffle
+    , choices
+    )
 
 {-| Extra randomized functions on lists.
 
@@ -52,6 +55,34 @@ choose list =
                 ( get index list, List.append (front index) (back index) )
             )
             gen
+
+
+{-| Repeated sample without replacement: produce a list of randomly
+selected elements of some list, and the list of unselected elements.
+-}
+choices : Int -> List a -> Generator ( List a, List a )
+choices count list =
+    if count < 1 then
+        constant ( [], list )
+
+    else
+        choose list
+            |> andThen
+                (\( choice, remaining ) ->
+                    let
+                        genRest =
+                            Random.lazy (\_ -> choices (count - 1) remaining)
+
+                        addToChoices =
+                            \elem ( chosen, unchosen ) -> ( elem :: chosen, unchosen )
+                    in
+                    case choice of
+                        Nothing ->
+                            constant ( [], list )
+
+                        Just elem ->
+                            Random.map (addToChoices elem) genRest
+                )
 
 
 {-| Shuffle the list using the Union-Find data structure with path compression algorithm.
