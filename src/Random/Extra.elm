@@ -180,8 +180,20 @@ choice x y =
 {-| Start with a list of generators, and turn them into a generator that returns a list.
 -}
 sequence : List (Generator a) -> Generator (List a)
-sequence =
-    List.foldr (Random.map2 (::)) (Random.constant [])
+sequence generators =
+    loop ( generators, [] ) sequenceHelp
+
+
+sequenceHelp :
+    ( List (Generator a), List a )
+    -> Generator (Step ( List (Generator a), List a ) (List a))
+sequenceHelp ( generators, acc ) =
+    case generators of
+        [] ->
+            constant (Done (List.reverse acc))
+
+        generator :: rest ->
+            map (\v -> Loop ( rest, v :: acc )) generator
 
 
 {-| Apply a function that returns a generator to each element of a list,
@@ -459,37 +471,32 @@ When writing such a generator, you might end up using recursion and `andThen`.
 The problem is that this grows the stack. `loop` enables writing similar code,
 but enables tail-call elimination.
 
-Consider the following code to repeat a `Generator a` some `x` number of times
-and collecting the results:
+Consider this implementation of `sequence`, which turns a `List (Generator a)`
+into a `Generator (List a)`.
 
-    repeat : Int -> Generator a -> Generator (List a)
-    repeat times generator =
-        repeatHelp times generator []
+    sequence : List (Generator a) -> Generator (List a)
+    sequence =
+        List.foldr (map2 (::)) (constant [])
 
-    repeatHelp : Int -> Generator a -> List a -> Generator (List a)
-    repeatHelp depth generator acc =
-        if depth > 1 then
-            andThen (\v -> repeatHelp (depth - 1) generator (v :: acc)) generator
-
-        else
-            constant acc
-
-When running this code with a depth of, let's say, 10000, you will most likely
-end up blowing the stack.
+When running this code with a sufficiently large list of generators (say, 10.000
+of then), you'll end up blowing the stack.
 
 The stack-safe rewrite using `loop` looks like so:
 
-    repeat : Int -> Generator a -> Generator (List a)
-    repeat depth generator =
-        loop ( depth, [] ) (repeatHelp generator)
+    sequence : List (Generator a) -> Generator (List a)
+    sequence generators =
+        loop ( generators, [] ) sequenceHelp
 
-    repeatHelp : Generator a -> ( Int, List a ) -> Generator (Step ( Int, List a ) (List a))
-    repeatHelp generator ( depth, acc ) =
-        if depth > 1 then
-            map (\v -> Loop ( depth - 1, v :: acc )) generator
+    sequenceHelp :
+        ( List (Generator a), List a )
+        -> Generator (Step ( List (Generator a), List a ) (List a))
+    sequenceHelp ( generators, acc ) =
+        case generators of
+            [] ->
+                constant (Done (List.reverse acc))
 
-        else
-            constant (Done acc)
+            generator :: rest ->
+                map (\v -> Loop ( rest, v :: acc )) generator
 
 -}
 loop : state -> (state -> Generator (Step state a)) -> Generator a
