@@ -5,6 +5,7 @@ module Random.Extra exposing
     , sequence, traverse, choices, frequency, sample, combine, rangeLengthList
     , filter
     , andThen2, andThen3, andThen4, andThen5, andThen6
+    , loop, Step(..)
     )
 
 {-| This module provides many common and general-purpose helper functions for
@@ -47,9 +48,26 @@ random arguments to drive more randomness.
 
 @docs andThen2, andThen3, andThen4, andThen5, andThen6
 
+
+# Looping indefinitely
+
+@docs loop, Step
+
 -}
 
-import Random exposing (Generator, andThen, constant, float, int, list, map, step)
+import Random
+    exposing
+        ( Generator
+        , Seed
+        , andThen
+        , constant
+        , float
+        , independentSeed
+        , int
+        , list
+        , map
+        , step
+        )
 
 
 {-| An unbiased generator of `Bool` values.
@@ -411,3 +429,86 @@ andThen6 constructor generatorA generatorB generatorC generatorD generatorE gene
                                     )
                         )
             )
+
+
+{-| Decide what steps to take next in your loop.
+
+If you are Done, you give the result of the whole loop. If you decide to Loop
+around again, you give a new state to work from. Maybe you need to add an item
+to a list? Or maybe you need to track some information about what you just saw?
+
+**Note**: It may be helpful to learn about [finite-state
+machines](https://en.wikipedia.org/wiki/Finite-state_machine) to get a broader
+intuition about using state. I.e. You may want to create a type that describes
+four possible states, and then use Loop to transition between them as you
+consume characters.
+
+-}
+type Step state a
+    = Loop state
+    | Done a
+
+
+{-| Create generators that can loop indefinitely.
+
+This can be helpful when you need to repeat a generator a (very) high number of
+times, or want to build a looping state machine which might have to loop around
+a high number of times.
+
+When writing such a generator, you might end up using recursion and `andThen`.
+The problem is that this grows the stack. `loop` enables writing similar code,
+but enables tail-call elimination.
+
+Consider the following code to repeat a `Generator a` some `x` number of times
+and collecting the results:
+
+    repeat : Int -> Generator a -> Generator (List a)
+    repeat times generator =
+        repeatHelp times generator []
+
+    repeatHelp : Int -> Generator a -> List a -> Generator (List a)
+    repeatHelp depth generator acc =
+        if depth > 1 then
+            andThen (\v -> repeatHelp (depth - 1) generator (v :: acc)) generator
+
+        else
+            constant acc
+
+When running this code with a depth of, let's say, 10000, you will most likely
+end up blowing the stack.
+
+The stack-safe rewrite using `loop` looks like so:
+
+    repeat : Int -> Generator a -> Generator (List a)
+    repeat depth generator =
+        loop ( depth, [] ) (repeatHelp generator)
+
+    repeatHelp : Generator a -> ( Int, List a ) -> Generator (Step ( Int, List a ) (List a))
+    repeatHelp generator ( depth, acc ) =
+        if depth > 1 then
+            map (\v -> Loop ( depth - 1, v :: acc )) generator
+
+        else
+            constant (Done acc)
+
+-}
+loop : state -> (state -> Generator (Step state a)) -> Generator a
+loop state toGenerator =
+    map (\seed -> loopHelp seed state toGenerator) independentSeed
+
+
+loopHelp : Seed -> state -> (state -> Generator (Step state a)) -> a
+loopHelp seed state toGenerator =
+    let
+        generator =
+            toGenerator state
+
+        ( res, nextSeed ) =
+            step generator seed
+    in
+    case res of
+        Loop nextState ->
+            loopHelp nextSeed nextState toGenerator
+
+        Done v ->
+            v
