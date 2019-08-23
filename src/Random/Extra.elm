@@ -441,7 +441,7 @@ to a list? Or maybe you need to track some information about what you just saw?
 machines](https://en.wikipedia.org/wiki/Finite-state_machine) to get a broader
 intuition about using state. I.e. You may want to create a type that describes
 four possible states, and then use Loop to transition between them as you
-consume characters.
+generate random values.
 
 -}
 type Step state a
