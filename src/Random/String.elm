@@ -9,7 +9,7 @@ module Random.String exposing (string, rangeLengthString)
 
 -}
 
-import Random exposing (Generator, andThen, int, list, map, map2)
+import Random exposing (Generator, andThen, int, list, map)
 import String exposing (fromList)
 
 

@@ -49,7 +49,7 @@ random arguments to drive more randomness.
 
 -}
 
-import Random exposing (Generator, andThen, constant, float, int, list, map, step)
+import Random exposing (Generator, andThen, constant, float, int, list, map)
 
 
 {-| An unbiased generator of `Bool` values.

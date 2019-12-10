@@ -11,7 +11,7 @@ We only provide generators for days and months. Other generators are trivial for
 
 -}
 
-import Random exposing (Generator, float, int, map)
+import Random exposing (Generator, map)
 import Random.Extra exposing (sample)
 import Time exposing (Month(..), Weekday(..))
 

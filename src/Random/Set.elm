@@ -23,7 +23,7 @@ module Random.Set exposing
 
 -}
 
-import Random exposing (Generator, andThen, constant, map)
+import Random exposing (Generator, andThen, constant)
 import Random.Extra exposing (filter)
 import Set exposing (Set)
 
