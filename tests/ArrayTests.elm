@@ -1,4 +1,4 @@
-module Tests.Random.Array exposing (suite)
+module ArrayTests exposing (suite)
 
 import Array
 import Expect

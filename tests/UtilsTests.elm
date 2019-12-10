@@ -1,4 +1,4 @@
-module Tests.Utils exposing (suite)
+module UtilsTests exposing (suite)
 
 import Array
 import Expect

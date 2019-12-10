@@ -1,4 +1,4 @@
-module Tests.Random.List exposing (suite)
+module ListTests exposing (suite)
 
 import Expect
 import Fuzz

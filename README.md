@@ -3,6 +3,12 @@ This library includes lots of extra helper functions for the Random module. It m
 
 If you want to add one or find a bug, please [open an issue](https://github.com/elm-community/random-extra/issues/new). If you want to contribute, you can open a PR adding tests.
 
+## Run tests
+
+```bash
+npm test
+```
+
 ## Changelog
 ### 3.1.0
 * Add `sequence` and `traverse` functions
