@@ -23,7 +23,7 @@ suite =
                 in
                 shuffledArray
                     |> Array.toList
-                    |> Expect.equalLists [ 4, 8, 5, 1, 0, 9, 7, 6, 2, 3 ]
+                    |> Expect.equalLists [ 7, 6, 2, 8, 1, 4, 9, 5, 0, 3 ]
 
         --
         , Test.fuzz (Fuzz.tuple ( Fuzz.int, Fuzz.intRange 0 100 )) "test existing all of the shuffled elements" <|
