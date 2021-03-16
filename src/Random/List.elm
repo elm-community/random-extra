@@ -1,14 +1,11 @@
-module Random.List exposing
-    ( choose, shuffle
-    , choices
-    )
+module Random.List exposing (choose, shuffle, choices)
 
 {-| Extra randomized functions on lists.
 
 
 # Work with a List
 
-@docs choose, shuffle
+@docs choose, shuffle, choices
 
 -}
 
