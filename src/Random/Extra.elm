@@ -5,6 +5,7 @@ module Random.Extra exposing
     , sequence, traverse, choices, frequency, sample, combine, rangeLengthList
     , filter
     , andThen2, andThen3, andThen4, andThen5, andThen6
+    , loop, Step(..)
     )
 
 {-| This module provides many common and general-purpose helper functions for
@@ -47,9 +48,26 @@ random arguments to drive more randomness.
 
 @docs andThen2, andThen3, andThen4, andThen5, andThen6
 
+
+# Looping indefinitely
+
+@docs loop, Step
+
 -}
 
-import Random exposing (Generator, andThen, constant, float, int, list, map, step)
+import Random
+    exposing
+        ( Generator
+        , Seed
+        , andThen
+        , constant
+        , float
+        , independentSeed
+        , int
+        , list
+        , map
+        , step
+        )
 
 
 {-| An unbiased generator of `Bool` values.
@@ -162,8 +180,20 @@ choice x y =
 {-| Start with a list of generators, and turn them into a generator that returns a list.
 -}
 sequence : List (Generator a) -> Generator (List a)
-sequence =
-    List.foldr (Random.map2 (::)) (Random.constant [])
+sequence generators =
+    loop ( generators, [] ) sequenceHelp
+
+
+sequenceHelp :
+    ( List (Generator a), List a )
+    -> Generator (Step ( List (Generator a), List a ) (List a))
+sequenceHelp ( generators, acc ) =
+    case generators of
+        [] ->
+            constant (Done (List.reverse acc))
+
+        generator :: rest ->
+            map (\v -> Loop ( rest, v :: acc )) generator
 
 
 {-| Apply a function that returns a generator to each element of a list,
@@ -411,3 +441,81 @@ andThen6 constructor generatorA generatorB generatorC generatorD generatorE gene
                                     )
                         )
             )
+
+
+{-| Decide what steps to take next in your loop.
+
+If you are Done, you give the result of the whole loop. If you decide to Loop
+around again, you give a new state to work from. Maybe you need to add an item
+to a list? Or maybe you need to track some information about what you just saw?
+
+**Note**: It may be helpful to learn about [finite-state
+machines](https://en.wikipedia.org/wiki/Finite-state_machine) to get a broader
+intuition about using state. I.e. You may want to create a type that describes
+four possible states, and then use Loop to transition between them as you
+generate random values.
+
+-}
+type Step state a
+    = Loop state
+    | Done a
+
+
+{-| Create generators that can loop indefinitely.
+
+This can be helpful when you need to repeat a generator a (very) high number of
+times, or want to build a looping state machine which might have to loop around
+a high number of times.
+
+When writing such a generator, you might end up using recursion and `andThen`.
+The problem is that this grows the stack. `loop` enables writing similar code,
+but enables tail-call elimination.
+
+Consider this implementation of `sequence`, which turns a `List (Generator a)`
+into a `Generator (List a)`.
+
+    sequence : List (Generator a) -> Generator (List a)
+    sequence =
+        List.foldr (map2 (::)) (constant [])
+
+When running this code with a sufficiently large list of generators (say, 10.000
+of then), you'll end up blowing the stack.
+
+The stack-safe rewrite using `loop` looks like so:
+
+    sequence : List (Generator a) -> Generator (List a)
+    sequence generators =
+        loop ( generators, [] ) sequenceHelp
+
+    sequenceHelp :
+        ( List (Generator a), List a )
+        -> Generator (Step ( List (Generator a), List a ) (List a))
+    sequenceHelp ( generators, acc ) =
+        case generators of
+            [] ->
+                constant (Done (List.reverse acc))
+
+            generator :: rest ->
+                map (\v -> Loop ( rest, v :: acc )) generator
+
+-}
+loop : state -> (state -> Generator (Step state a)) -> Generator a
+loop state toGenerator =
+    map (\seed -> loopHelp seed state toGenerator) independentSeed
+
+
+loopHelp : Seed -> state -> (state -> Generator (Step state a)) -> a
+loopHelp seed state toGenerator =
+    let
+        generator =
+            toGenerator state
+
+        ( res, nextSeed ) =
+            step generator seed
+    in
+    case res of
+        Loop nextState ->
+            loopHelp nextSeed nextState toGenerator
+
+        Done v ->
+            v
