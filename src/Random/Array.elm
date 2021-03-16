@@ -19,7 +19,6 @@ module Random.Array exposing
 
 import Array exposing (Array, empty, fromList)
 import Random exposing (Generator, andThen, constant, int, list, map)
-import Utils
 
 
 {-| Generate a random array of given size given a random generator
@@ -90,21 +89,29 @@ choose arr =
             gen
 
 
-{-| Shuffle the array using the Union-Find data structure with path compression algorithm.
-Takes O(_n_ log _n_) space and time.
+anyInt : Generator Int
+anyInt =
+    Random.int Random.minInt Random.maxInt
+
+
+{-| Shuffle the list. Takes O(_n_ log _n_) time and no extra space.
 -}
 shuffle : Array a -> Generator (Array a)
-shuffle values =
-    let
-        -- Yes, it takes O(1) time for get the Array's length,
-        -- but let's just keep the value here
-        length =
-            Array.length values
-    in
+shuffle arr =
     Random.map
-        (Utils.selectUniqByIndexes values >> Array.fromList)
-        -- It generates the sequence of random indexes
-        -- The indexes could and will (for sure) duplicate each other
-        -- But UnionFind will help us to convert them into uniq,
-        -- even if all of the indexes will be the same value
-        (Random.list length (Random.int 0 (length - 1)))
+        (\independentSeed ->
+            arr
+                |> Array.foldl
+                    (\item ( acc, seed ) ->
+                        let
+                            ( tag, nextSeed ) =
+                                Random.step anyInt seed
+                        in
+                        ( ( item, tag ) :: acc, nextSeed )
+                    )
+                    ( [], independentSeed )
+                |> Tuple.first
+                |> List.sortBy Tuple.second
+                |> List.foldl (Array.push << Tuple.first) Array.empty
+        )
+        Random.independentSeed
