@@ -6,6 +6,7 @@
     "version": "3.2.0",
     "exposed-modules": [
         "Random.Array",
+        "Random.Bool",
         "Random.Char",
         "Random.Date",
         "Random.Dict",
